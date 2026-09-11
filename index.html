@@ -394,7 +394,7 @@ document.getElementById("googleSignInBtn").addEventListener("click", ()=>{
   const provider = new firebase.auth.GoogleAuthProvider();
   auth.signInWithPopup(provider).catch(err=>{
     const el = document.getElementById("authError");
-    el.textContent = "Connexion impossible — réessaie.";
+    el.textContent = "Connexion impossible : " + (err.code || err.message || "erreur inconnue");
     el.style.display = "block";
     console.warn(err);
   });
