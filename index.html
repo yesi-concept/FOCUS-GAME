@@ -81,16 +81,136 @@ nav.tabs button.active{color:var(--gold-soft);}
 .muted{color:var(--ink-dim); font-size:12.5px;}
 .exportrow{display:flex; gap:8px; margin-top:6px;}
 .exportrow .btn{flex:1;}
+.locked-tag{display:inline-block; font-size:11px; background:rgba(198,95,82,.12); color:var(--danger); border:1px solid var(--danger); border-radius:5px; padding:2px 8px; margin-left:6px; vertical-align:middle;}
+
+/* ---------- ECRAN DE CONNEXION ---------- */
+.auth-gate{
+  position:fixed; inset:0; z-index:100; background:#000;
+  display:flex; align-items:center; justify-content:center; padding:24px;
+}
+.auth-card{
+  width:100%; max-width:360px; text-align:center;
+  background:var(--card); border:1px solid var(--border); border-radius:12px;
+  padding:32px 24px; box-shadow:var(--shadow);
+}
+.auth-logo{width:56px; height:56px; object-fit:contain; margin-bottom:14px;}
+.auth-card h1{font-size:19px; color:var(--gold-soft); margin-bottom:2px;}
+.auth-sub{font-size:11px; color:var(--ink-dim); letter-spacing:1px; text-transform:uppercase; margin-bottom:22px;}
+.auth-text{font-size:13.5px; color:var(--ink-dim); line-height:1.6; margin-bottom:18px;}
+.auth-error{font-size:12.5px; color:var(--danger); margin-top:12px;}
+#googleSignInBtn{display:flex; align-items:center; justify-content:center; gap:10px;}
+
+/* ---------- RAPPORT D'IMPRESSION / PDF ---------- */
+#printReport{display:none;}
+#printReport, #printReport *{box-sizing:border-box;}
+#printReport{
+  font-family:Georgia,"Iowan Old Style","Palatino Linotype",serif;
+  color:#1a1a1a; background:#fff; width:100%;
+}
+#printReport .rp-masthead{
+  display:flex; align-items:center; gap:16px;
+  border-bottom:3px solid #9a7128; padding-bottom:14px; margin-bottom:22px;
+}
+#printReport .rp-masthead img{width:52px; height:52px; object-fit:contain;}
+#printReport .rp-masthead .rp-titles{flex:1;}
+#printReport .rp-masthead h1{font-size:22px; margin:0; letter-spacing:.2px; color:#1a1a1a;}
+#printReport .rp-masthead .rp-sub{font-family:-apple-system,sans-serif; font-size:11.5px; color:#9a7128; text-transform:uppercase; letter-spacing:1.2px; margin-top:3px;}
+#printReport .rp-masthead .rp-date{font-family:-apple-system,sans-serif; font-size:11px; color:#777; text-align:right; white-space:nowrap;}
+
+#printReport .rp-identity{
+  display:grid; grid-template-columns:1fr 1fr; gap:4px 28px;
+  border:1px solid #ddd; border-radius:4px; padding:16px 20px; margin-bottom:26px;
+  background:#fafaf7; font-family:-apple-system,sans-serif; font-size:12.5px;
+}
+#printReport .rp-identity .rp-player{grid-column:1 / -1; font-family:Georgia,serif; font-size:17px; font-weight:700; margin-bottom:6px; color:#1a1a1a;}
+#printReport .rp-identity div span{color:#888;}
+
+#printReport .rp-week{margin-bottom:26px;}
+#printReport .rp-week-head{
+  display:flex; align-items:baseline; justify-content:space-between;
+  border-bottom:1px solid #9a7128; padding-bottom:5px; margin-bottom:10px;
+}
+#printReport .rp-week-head h2{font-size:16px; margin:0; color:#1a1a1a;}
+#printReport .rp-week-head .rp-week-score{font-family:-apple-system,sans-serif; font-size:13px; font-weight:600; color:#9a7128;}
+
+#printReport h3.rp-subhead{
+  font-family:-apple-system,sans-serif; font-size:10.5px; text-transform:uppercase;
+  letter-spacing:1px; color:#9a7128; margin:14px 0 6px;
+}
+#printReport table.rp-table{width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:12px; margin-bottom:4px;}
+#printReport table.rp-table th{
+  text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.5px;
+  color:#888; font-weight:600; border-bottom:1px solid #ccc; padding:5px 8px;
+}
+#printReport table.rp-table td{border-bottom:1px solid #eee; padding:7px 8px; vertical-align:top; color:#1a1a1a;}
+#printReport table.rp-table tr:nth-child(even) td{background:#faf9f5;}
+#printReport table.rp-table td.rp-empty{color:#999; font-style:italic;}
+
+#printReport .rp-eval{
+  margin-top:8px; padding:9px 12px; background:#f5f0e2; border-left:3px solid #9a7128;
+  font-family:-apple-system,sans-serif; font-size:12.5px;
+}
+#printReport .rp-eval strong{color:#1a1a1a;}
+
+#printReport .rp-bilan{margin-top:8px; border-top:3px solid #9a7128; padding-top:16px;}
+#printReport .rp-bilan-score{display:flex; align-items:baseline; gap:14px; margin-bottom:14px;}
+#printReport .rp-bilan-score .num{font-size:46px; font-weight:700; color:#1a1a1a; line-height:1;}
+#printReport .rp-bilan-score .den{font-family:-apple-system,sans-serif; font-size:13px; color:#777;}
+#printReport table.rp-recap{width:100%; border-collapse:collapse; font-family:-apple-system,sans-serif; font-size:12px;}
+#printReport table.rp-recap th{text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:#888; border-bottom:1px solid #ccc; padding:5px 8px;}
+#printReport table.rp-recap td{border-bottom:1px solid #eee; padding:6px 8px;}
+
+#printReport .rp-footer{
+  margin-top:30px; padding-top:10px; border-top:1px solid #ddd;
+  font-family:-apple-system,sans-serif; font-size:9.5px; color:#999; text-align:center;
+}
+
 @media print{
-  nav.tabs, header.top .theme-btn, .no-print{display:none !important;}
-  body{background:#fff; color:#111; padding:0;}
-  .view{display:block !important;}
-  .card{box-shadow:none; border:1px solid #ccc;}
+  @page{ margin:16mm 14mm; }
+  nav.tabs, header.top, .no-print{display:none !important;}
+  html, body{background:#fff !important; color:#111 !important; padding:0; margin:0;}
+  .view, .wrap > .view{display:none !important;}
+  #printReport{display:block !important; max-width:none;}
+  #printReport .rp-masthead{break-after:avoid; page-break-after:avoid;}
+  #printReport .rp-identity{break-inside:avoid; page-break-inside:avoid;}
+  #printReport .rp-week-head{break-after:avoid; page-break-after:avoid;}
+  #printReport h3.rp-subhead{break-after:avoid; page-break-after:avoid;}
+  #printReport table.rp-table tr, #printReport table.rp-recap tr{break-inside:avoid; page-break-inside:avoid;}
+  #printReport .rp-eval{break-inside:avoid; page-break-inside:avoid;}
+  #printReport .rp-bilan{break-inside:avoid; page-break-inside:avoid;}
 }
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js" crossorigin="anonymous"></script>
 </head>
 <body data-theme="dark">
+<div id="printReport"></div>
 
+<div id="authGate" class="auth-gate">
+  <div class="auth-card">
+    <img src="" id="authLogo" alt="Y.E.S.I CONCEPT" class="auth-logo">
+    <h1>Fiche Suivi Joueur</h1>
+    <p class="auth-sub">Y.E.S.I CONCEPT</p>
+
+    <div id="authStep-loading">
+      <p class="auth-text">Chargement…</p>
+    </div>
+
+    <div id="authStep-login" style="display:none;">
+      <p class="auth-text">Connectez-vous avec votre compte Google pour accéder à votre suivi.</p>
+      <button id="googleSignInBtn" class="btn btn-gold btn-block">Se connecter avec Google</button>
+      <p id="authError" class="auth-error" style="display:none;"></p>
+    </div>
+
+    <div id="authStep-denied" style="display:none;">
+      <p class="auth-text">Ce compte n'est pas autorisé à accéder à cet outil.<br>Contacte ton coach Y.E.S.I CONCEPT pour obtenir l'accès.</p>
+      <button id="signOutBtn" class="btn btn-outline btn-block">Se déconnecter</button>
+    </div>
+  </div>
+</div>
+
+<div id="appRoot" style="display:none;">
 <header class="top">
   <div class="brand">
     <div class="brand-left">
@@ -101,6 +221,7 @@ nav.tabs button.active{color:var(--gold-soft);}
       </div>
     </div>
     <button class="theme-btn no-print" id="themeToggle">🌙</button>
+    <button class="theme-btn no-print" id="appSignOutBtn" title="Se déconnecter">🚪</button>
   </div>
 </header>
 
@@ -175,16 +296,17 @@ nav.tabs button.active{color:var(--gold-soft);}
   <button class="tab-btn" data-view="suivi"><span class="ic">📋</span>Suivi</button>
   <button class="tab-btn" data-view="bilan"><span class="ic">📊</span>Bilan</button>
 </nav>
+</div><!-- /appRoot -->
 
 <form id="formsubmitHelper" style="display:none;"></form>
 
 <script>
-const STORAGE_KEY = "yesi_suivi_joueur_v1";
+let STORAGE_KEY = "yesi_suivi_joueur_v1";
 const EMAIL_CIBLE = "yesiconcept.rdv@gmail.com";
 const CYCLE_DUREE_JOURS = 30;
 
 function emptyWeek(n){
-  return { numero:n, entrainements:[], matchs:[], noteEntrainement:null, noteMatch:null };
+  return { numero:n, entrainements:[], matchs:[], noteEntrainement:null, noteMatch:null, premiereSaisieAt:null, noteSavedAt:null };
 }
 function defaultState(){
   return {
@@ -196,22 +318,132 @@ function defaultState(){
     theme:"dark"
   };
 }
-let state = load();
-state.theme = "dark"; // fond noir forcé
-function load(){
+let state = defaultState();
+let userDocId = null; // défini après connexion réussie (email autorisé)
+
+function normalizeState(s){
+  if(!s || !s.semaines || s.semaines.length!==4) return defaultState();
+  s.semaines.forEach(w=>{
+    (w.entrainements||[]).forEach(e=>{ if(typeof e.objectifs === "string") e.objectifs = e.objectifs ? [e.objectifs] : [""]; if(!e.objectifs || !e.objectifs.length) e.objectifs=[""]; });
+    (w.matchs||[]).forEach(e=>{ if(typeof e.objectifs === "string") e.objectifs = e.objectifs ? [e.objectifs] : [""]; if(!e.objectifs || !e.objectifs.length) e.objectifs=[""]; });
+    if(w.premiereSaisieAt === undefined) w.premiereSaisieAt = null;
+    if(w.noteSavedAt === undefined) w.noteSavedAt = null;
+  });
+  return s;
+}
+function loadLocal(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return defaultState();
-    const s = JSON.parse(raw);
-    if(!s.semaines || s.semaines.length!==4) return defaultState();
-    s.semaines.forEach(w=>{
-      (w.entrainements||[]).forEach(e=>{ if(typeof e.objectifs === "string") e.objectifs = e.objectifs ? [e.objectifs] : [""]; if(!e.objectifs || !e.objectifs.length) e.objectifs=[""]; });
-      (w.matchs||[]).forEach(e=>{ if(typeof e.objectifs === "string") e.objectifs = e.objectifs ? [e.objectifs] : [""]; if(!e.objectifs || !e.objectifs.length) e.objectifs=[""]; });
-    });
-    return s;
-  }catch(e){ return defaultState(); }
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ return null; }
 }
-function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); render(); }
+function saveLocal(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+function save(){
+  saveLocal();
+  if(userDocId){
+    db.collection("joueurs").doc(userDocId).set(state).catch(err=>{
+      console.warn("Synchronisation Firestore échouée (hors-ligne ?)", err);
+    });
+  }
+  render();
+}
+
+const VERROUILLAGE_HEURES = 24;
+function weekLocked(w){
+  if(w.noteEntrainement!==null && w.noteMatch!==null) return true; // note posée => verrouillé définitivement
+  if(w.premiereSaisieAt){
+    const heuresEcoulees = (Date.now() - new Date(w.premiereSaisieAt).getTime()) / 3600000;
+    if(heuresEcoulees >= VERROUILLAGE_HEURES) return true; // saisie non finalisée depuis + de 24h
+  }
+  return false;
+}
+
+// ---------- FIREBASE : AUTHENTIFICATION + STOCKAGE PAR COMPTE ----------
+const firebaseConfig = {
+  apiKey: "AIzaSyA1NE8TIoR3NafqF39SSOZ3nlJGpXgJ95A",
+  authDomain: "suivi-joueur.firebaseapp.com",
+  projectId: "suivi-joueur",
+  storageBucket: "suivi-joueur.firebasestorage.app",
+  messagingSenderId: "2190589503",
+  appId: "1:2190589503:web:e6df856ce4577d1e41828a"
+};
+window.addEventListener("error", (ev)=>{
+  const el = document.getElementById("authError");
+  if(!el) return;
+  showAuthStep("login");
+  el.textContent = "Erreur technique : " + (ev.message || "voir détails") + (ev.filename ? " (" + ev.filename.split("/").pop() + ")" : "");
+  el.style.display = "block";
+});
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+document.getElementById("authLogo").src = document.querySelector(".brand-left img").getAttribute("src");
+
+function showAuthStep(step){
+  document.getElementById("authStep-loading").style.display = step==="loading" ? "block" : "none";
+  document.getElementById("authStep-login").style.display = step==="login" ? "block" : "none";
+  document.getElementById("authStep-denied").style.display = step==="denied" ? "block" : "none";
+}
+
+document.getElementById("googleSignInBtn").addEventListener("click", ()=>{
+  document.getElementById("authError").style.display = "none";
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(err=>{
+    const el = document.getElementById("authError");
+    el.textContent = "Connexion impossible — réessaie.";
+    el.style.display = "block";
+    console.warn(err);
+  });
+});
+document.getElementById("signOutBtn").addEventListener("click", ()=>{ auth.signOut(); });
+document.getElementById("appSignOutBtn").addEventListener("click", ()=>{ auth.signOut(); });
+
+async function initStateForUser(){
+  let loaded = null;
+  try{
+    const doc = await db.collection("joueurs").doc(userDocId).get();
+    if(doc.exists) loaded = doc.data();
+  }catch(e){
+    console.warn("Lecture Firestore échouée, utilisation du cache local", e);
+  }
+  if(!loaded) loaded = loadLocal();
+  state = normalizeState(loaded);
+  state.theme = "dark";
+  saveLocal();
+  render();
+}
+
+auth.onAuthStateChanged(async (user)=>{
+  if(!user){
+    userDocId = null;
+    document.getElementById("appRoot").style.display = "none";
+    document.getElementById("authGate").style.display = "flex";
+    showAuthStep("login");
+    return;
+  }
+  showAuthStep("loading");
+  const email = (user.email || "").toLowerCase();
+  try{
+    const wlDoc = await db.collection("whitelist").doc(email).get();
+    if(!wlDoc.exists){
+      showAuthStep("denied");
+      return;
+    }
+  }catch(e){
+    console.warn("Vérification de l'accès impossible", e);
+    showAuthStep("denied");
+    return;
+  }
+  userDocId = email;
+  STORAGE_KEY = "yesi_suivi_joueur_v1_" + email;
+  await initStateForUser();
+  document.getElementById("authGate").style.display = "none";
+  document.getElementById("appRoot").style.display = "block";
+});
 
 // ---------- THEME ----------
 document.body.setAttribute("data-theme", state.theme || "dark");
@@ -328,36 +560,39 @@ function entryHtml(kind, weekNum, idx, e){
 
 function renderWeekContent(){
   const w = state.semaines[currentWeek-1];
-  const isLock = locked();
+  const isLock = locked() || weekLocked(w);
+  const lockTag = weekLocked(w) ? `<span class="locked-tag no-print">🔒 verrouillée</span>` : ``;
   const el = document.getElementById("weekContent");
   el.innerHTML = `
     <div class="card ${isLock?'lock-shade':''}">
-      <h2>Semaine ${w.numero} — Entraînements</h2>
+      <h2>Semaine ${w.numero} — Entraînements ${lockTag}</h2>
       <div id="entrList"></div>
       <button class="btn btn-outline btn-block no-print" onclick="addEntry(${w.numero},'entrainements')">+ Ajouter un entraînement</button>
     </div>
     <div class="card ${isLock?'lock-shade':''}">
-      <h2>Semaine ${w.numero} — Matchs</h2>
+      <h2>Semaine ${w.numero} — Matchs ${lockTag}</h2>
       <div id="matchList"></div>
       <button class="btn btn-outline btn-block no-print" onclick="addEntry(${w.numero},'matchs')">+ Ajouter un match</button>
     </div>
     <div class="card ${isLock?'lock-shade':''}">
-      <h2>Auto-évaluation de la semaine</h2>
+      <h2>Auto-évaluation de la semaine ${lockTag}</h2>
       <div class="row">
         <div>
           <label>Note entraînements (/5)</label>
-          <select id="noteEnt">${[0,1,2,3,4,5].map(n=>`<option value="${n}" ${w.noteEntrainement==n?'selected':''}>${n}</option>`).join('')}</select>
+          <select id="noteEnt" ${weekLocked(w)?'disabled':''}>${[0,1,2,3,4,5].map(n=>`<option value="${n}" ${w.noteEntrainement==n?'selected':''}>${n}</option>`).join('')}</select>
         </div>
         <div>
           <label>Note match (/5)</label>
-          <select id="noteMatch">${[0,1,2,3,4,5].map(n=>`<option value="${n}" ${w.noteMatch==n?'selected':''}>${n}</option>`).join('')}</select>
+          <select id="noteMatch" ${weekLocked(w)?'disabled':''}>${[0,1,2,3,4,5].map(n=>`<option value="${n}" ${w.noteMatch==n?'selected':''}>${n}</option>`).join('')}</select>
         </div>
       </div>
       <div class="notebox" style="margin-top:12px;">
         <div class="v">${(w.noteEntrainement||0)+(w.noteMatch||0)} / 10</div>
         <div class="l">Note de la semaine ${w.numero}</div>
       </div>
-      <button class="btn btn-gold btn-block no-print" onclick="saveWeekNote(${w.numero})">Enregistrer la note de la semaine</button>
+      ${weekLocked(w)
+        ? `<p class="muted no-print" style="margin-top:8px;">Cette semaine est verrouillée${w.noteSavedAt ? ' — note enregistrée le ' + new Date(w.noteSavedAt).toLocaleDateString('fr-FR') : ''}. Plus aucune modification possible.</p>`
+        : `<button class="btn btn-gold btn-block no-print" onclick="saveWeekNote(${w.numero})">Enregistrer la note de la semaine</button>`}
     </div>
   `;
   document.getElementById("entrList").innerHTML = w.entrainements.map((e,i)=>entryHtml("entrainement", w.numero, i, e)).join("") || `<p class="muted">Aucun entraînement ajouté.</p>`;
@@ -365,27 +600,31 @@ function renderWeekContent(){
 }
 
 function addEntry(weekNum, kind){
-  if(locked()) return;
   const w = state.semaines[weekNum-1];
+  if(locked() || weekLocked(w)) return;
+  if(!w.premiereSaisieAt) w.premiereSaisieAt = new Date().toISOString();
   if(kind==="entrainements") w.entrainements.push({date:"",objectifs:[""]});
   else w.matchs.push({date:"",adversaire:"",objectifs:[""]});
   save();
   currentWeek = weekNum; renderWeekNav(); renderWeekContent();
 }
 function removeEntry(weekNum, kind, idx){
-  if(locked()) return;
-  state.semaines[weekNum-1][kind].splice(idx,1);
+  const w = state.semaines[weekNum-1];
+  if(locked() || weekLocked(w)) return;
+  w[kind].splice(idx,1);
   save();
   currentWeek = weekNum; renderWeekNav(); renderWeekContent();
 }
 function updateEntry(weekNum, kind, idx, field, value){
-  if(locked()) return;
-  state.semaines[weekNum-1][kind][idx][field] = value;
+  const w = state.semaines[weekNum-1];
+  if(locked() || weekLocked(w)) return;
+  w[kind][idx][field] = value;
   save();
 }
 function addObjectif(kind, weekNum, idx){
-  if(locked()) return;
-  const entry = state.semaines[weekNum-1][kind][idx];
+  const w = state.semaines[weekNum-1];
+  if(locked() || weekLocked(w)) return;
+  const entry = w[kind][idx];
   if(!entry.objectifs) entry.objectifs = [];
   if(entry.objectifs.length>=3) return;
   entry.objectifs.push("");
@@ -393,23 +632,26 @@ function addObjectif(kind, weekNum, idx){
   currentWeek = weekNum; renderWeekNav(); renderWeekContent();
 }
 function removeObjectif(kind, weekNum, idx, oIdx){
-  if(locked()) return;
-  const entry = state.semaines[weekNum-1][kind][idx];
+  const w = state.semaines[weekNum-1];
+  if(locked() || weekLocked(w)) return;
+  const entry = w[kind][idx];
   entry.objectifs.splice(oIdx,1);
   if(entry.objectifs.length===0) entry.objectifs.push("");
   save();
   currentWeek = weekNum; renderWeekNav(); renderWeekContent();
 }
 function updateObjectif(kind, weekNum, idx, oIdx, value){
-  if(locked()) return;
-  state.semaines[weekNum-1][kind][idx].objectifs[oIdx] = value;
+  const w = state.semaines[weekNum-1];
+  if(locked() || weekLocked(w)) return;
+  w[kind][idx].objectifs[oIdx] = value;
   save();
 }
 function saveWeekNote(weekNum){
-  if(locked() && semainesCompletes()>=4){ /* still allow finishing last unset note before lock triggers on save */ }
   const w = state.semaines[weekNum-1];
+  if(weekLocked(w)) return;
   w.noteEntrainement = parseInt(document.getElementById("noteEnt").value,10);
   w.noteMatch = parseInt(document.getElementById("noteMatch").value,10);
+  w.noteSavedAt = new Date().toISOString();
   save();
   renderWeekNav(); renderWeekContent();
 }
@@ -521,8 +763,101 @@ function buildResumeText(){
 }
 
 // ---------- EXPORTS ----------
+const LOGO_DATA_URI = document.querySelector(".brand-left img").getAttribute("src");
+
+function fmtDateFr(iso){
+  if(!iso) return "-";
+  const d = new Date(iso);
+  if(isNaN(d)) return iso;
+  return d.toLocaleDateString("fr-FR");
+}
+
+function buildPrintReport(){
+  const i = state.identite;
+  const total = scoreTotal();
+  const genDate = new Date().toLocaleDateString("fr-FR", {day:"2-digit", month:"long", year:"numeric"});
+
+  let html = `
+    <div class="rp-masthead">
+      <img src="${LOGO_DATA_URI}" alt="Logo Y.E.S.I CONCEPT">
+      <div class="rp-titles">
+        <h1>Fiche Suivi Joueur</h1>
+        <div class="rp-sub">Y.E.S.I CONCEPT — Bilan de cycle mensuel</div>
+      </div>
+      <div class="rp-date">Édité le<br>${genDate}</div>
+    </div>
+
+    <div class="rp-identity">
+      <div class="rp-player">${(i.prenom||'') + ' ' + (i.nom||'')}</div>
+      <div><span>Poste :</span> ${i.poste || '-'}</div>
+      <div><span>Club :</span> ${i.club || '-'}</div>
+      <div><span>Date de naissance :</span> ${fmtDateFr(i.naissance)}</div>
+      <div><span>Coach référent :</span> ${i.coach || '-'}</div>
+      <div><span>Début du suivi :</span> ${fmtDateFr(i.debut)}</div>
+      <div><span>Score du cycle :</span> ${total} / 40</div>
+    </div>
+  `;
+
+  state.semaines.forEach(w=>{
+    const entrRows = w.entrainements.length
+      ? w.entrainements.map(e=>`<tr><td style="white-space:nowrap;">${fmtDateFr(e.date)}</td><td>${(e.objectifs||[]).filter(Boolean).join(' · ') || '<span class="rp-empty">Aucun objectif renseigné</span>'}</td></tr>`).join('')
+      : `<tr><td colspan="2" class="rp-empty">Aucun entraînement enregistré</td></tr>`;
+    const matchRows = w.matchs.length
+      ? w.matchs.map(e=>`<tr><td style="white-space:nowrap;">${fmtDateFr(e.date)}</td><td style="white-space:nowrap;">${e.adversaire || '-'}</td><td>${(e.objectifs||[]).filter(Boolean).join(' · ') || '<span class="rp-empty">Aucun objectif renseigné</span>'}</td></tr>`).join('')
+      : `<tr><td colspan="3" class="rp-empty">Aucun match enregistré</td></tr>`;
+
+    html += `
+    <div class="rp-week">
+      <div class="rp-week-head">
+        <h2>Semaine ${w.numero}</h2>
+        <div class="rp-week-score">${(w.noteEntrainement===null&&w.noteMatch===null) ? 'Non notée' : ((w.noteEntrainement||0)+(w.noteMatch||0))+' / 10'}</div>
+      </div>
+
+      <h3 class="rp-subhead">Entraînements</h3>
+      <table class="rp-table">
+        <tr><th style="width:90px;">Date</th><th>Objectifs</th></tr>
+        ${entrRows}
+      </table>
+
+      <h3 class="rp-subhead">Matchs</h3>
+      <table class="rp-table">
+        <tr><th style="width:90px;">Date</th><th style="width:140px;">Adversaire</th><th>Objectifs</th></tr>
+        ${matchRows}
+      </table>
+
+      <div class="rp-eval">
+        <strong>Auto-évaluation —</strong> Entraînement : ${w.noteEntrainement ?? '-'}/5 &nbsp;·&nbsp; Match : ${w.noteMatch ?? '-'}/5
+      </div>
+    </div>`;
+  });
+
+  html += `
+    <div class="rp-bilan">
+      <h3 class="rp-subhead">Bilan du cycle</h3>
+      <div class="rp-bilan-score">
+        <div class="num">${total}</div>
+        <div class="den">/ 40 points<br>cumulés sur les 4 semaines du cycle</div>
+      </div>
+      <table class="rp-recap">
+        <tr><th>Semaine</th><th>Entraînement /5</th><th>Match /5</th><th>Total /10</th></tr>
+        ${state.semaines.map(w=>`<tr>
+          <td>Semaine ${w.numero}</td>
+          <td>${w.noteEntrainement ?? '-'}</td>
+          <td>${w.noteMatch ?? '-'}</td>
+          <td>${(w.noteEntrainement===null&&w.noteMatch===null) ? '-' : (w.noteEntrainement||0)+(w.noteMatch||0)}</td>
+        </tr>`).join('')}
+      </table>
+    </div>
+
+    <div class="rp-footer">Y.E.S.I CONCEPT — Coaching mental &amp; suivi de performance — yesiconcept.rdv@gmail.com</div>
+  `;
+
+  document.getElementById("printReport").innerHTML = html;
+}
+
 document.getElementById("exportPdf").addEventListener("click", ()=>{
-  window.print();
+  buildPrintReport();
+  setTimeout(()=>window.print(), 80);
 });
 document.getElementById("exportHtml").addEventListener("click", ()=>{
   const i = state.identite;
@@ -546,7 +881,6 @@ function render(){
   renderBilan();
   renderLockBanners();
 }
-render();
 </script>
 </body>
 </html>
