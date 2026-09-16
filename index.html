@@ -40,6 +40,7 @@ textarea{min-height:64px; resize:vertical;}
 .btn{display:inline-flex; align-items:center; justify-content:center; gap:6px; border:1px solid var(--border);
   background:var(--card2); color:var(--ink); padding:9px 14px; border-radius:7px; font-size:13.5px; cursor:pointer;}
 .btn-gold{background:var(--gold); color:#1c1710; border:none; font-weight:600;}
+.btn-gold:disabled{background:#4a4436; color:#8a8375; cursor:not-allowed; opacity:.7;}
 .btn-outline{background:transparent; border:1px solid var(--gold); color:var(--gold-soft);}
 .btn-danger{background:transparent; border:1px solid var(--danger); color:var(--danger);}
 .btn-block{width:100%; margin-top:8px;}
@@ -690,6 +691,11 @@ function renderBilan(){
 
 function renderLockBanners(){
   const isLock = locked();
+  const sendBtn = document.getElementById("sendBilan");
+  if(sendBtn){
+    sendBtn.disabled = !isLock;
+    sendBtn.title = isLock ? "" : `Disponible une fois le cycle terminé (${semainesCompletes()}/4 semaines notées, ${joursEcoules()}/${CYCLE_DUREE_JOURS} jours)`;
+  }
   const suiviBanner = document.getElementById("lockBannerSuivi");
   const bilanBanner = document.getElementById("lockBannerBilan");
   if(isLock){
@@ -706,6 +712,16 @@ function renderLockBanners(){
 document.getElementById("sendBilan").addEventListener("click", async ()=>{
   const btn = document.getElementById("sendBilan");
   const statusEl = document.getElementById("sendStatus");
+
+  if(!locked()){
+    statusEl.textContent = `Le cycle n'est pas encore terminé (${semainesCompletes()}/4 semaines notées, ${joursEcoules()}/${CYCLE_DUREE_JOURS} jours). L'envoi du bilan n'est possible qu'en fin de cycle.`;
+    statusEl.style.color = "var(--danger)";
+    return;
+  }
+  if(!confirm("Envoyer le bilan et démarrer un nouveau cycle de 4 semaines ? Cette action archive le cycle actuel et remet les 4 semaines à zéro. Cette action est irréversible.")){
+    return;
+  }
+
   const total = scoreTotal();
   const i = state.identite;
   const resume = buildResumeText();
