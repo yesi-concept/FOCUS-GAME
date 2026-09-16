@@ -354,7 +354,8 @@ function save(){
 const VERROUILLAGE_HEURES = 24;
 function weekLocked(w){
   if(w.noteEntrainement!==null && w.noteMatch!==null) return true; // note posée => verrouillé définitivement
-  if(w.premiereSaisieAt){
+  const aDesEntrees = (w.entrainements && w.entrainements.length>0) || (w.matchs && w.matchs.length>0);
+  if(aDesEntrees && w.premiereSaisieAt){
     const heuresEcoulees = (Date.now() - new Date(w.premiereSaisieAt).getTime()) / 3600000;
     if(heuresEcoulees >= VERROUILLAGE_HEURES) return true; // saisie non finalisée depuis + de 24h
   }
@@ -609,10 +610,14 @@ function addEntry(weekNum, kind){
   save();
   currentWeek = weekNum; renderWeekNav(); renderWeekContent();
 }
+function weekIsEmpty(w){
+  return w.entrainements.length===0 && w.matchs.length===0 && w.noteEntrainement===null && w.noteMatch===null;
+}
 function removeEntry(weekNum, kind, idx){
   const w = state.semaines[weekNum-1];
   if(locked() || weekLocked(w)) return;
   w[kind].splice(idx,1);
+  if(weekIsEmpty(w)) w.premiereSaisieAt = null;
   save();
   currentWeek = weekNum; renderWeekNav(); renderWeekContent();
 }
