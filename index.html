@@ -351,14 +351,8 @@ function save(){
   render();
 }
 
-const VERROUILLAGE_HEURES = 24;
 function weekLocked(w){
   if(w.noteEntrainement!==null && w.noteMatch!==null) return true; // note posée => verrouillé définitivement
-  const aDesEntrees = (w.entrainements && w.entrainements.length>0) || (w.matchs && w.matchs.length>0);
-  if(aDesEntrees && w.premiereSaisieAt){
-    const heuresEcoulees = (Date.now() - new Date(w.premiereSaisieAt).getTime()) / 3600000;
-    if(heuresEcoulees >= VERROUILLAGE_HEURES) return true; // saisie non finalisée depuis + de 24h
-  }
   return false;
 }
 
