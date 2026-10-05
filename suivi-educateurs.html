@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Suivi Éducateurs</title>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js" crossorigin="anonymous"></script>
+<style>
+:root{
+  --bg:#0f0d0a; --card:#1a1712; --card2:#221e17; --line:#3a3226;
+  --gold:#c9a24a; --gold2:#e4c77a; --beige:#efe6d2; --muted:#a69a83;
+  --ok:#5fb27a; --warn:#d98a3a; --bad:#c9574a;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--beige);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.45;min-height:100vh}
+.hidden{display:none!important}
+header{position:sticky;top:0;z-index:10;background:rgba(15,13,10,.96);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+header h1{font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold)}
+header small{display:block;color:var(--muted);font-size:12px;text-transform:none;letter-spacing:0}
+main{max-width:760px;margin:0 auto;padding:16px 16px 90px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.card h2{font-size:15px;color:var(--gold2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
+.card h3{font-size:14px;color:var(--gold);margin:14px 0 8px}
+label{display:block;font-size:12px;color:var(--muted);margin:10px 0 5px;text-transform:uppercase;letter-spacing:.04em}
+input,select,textarea{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--beige);border-radius:10px;padding:11px 12px;font-size:15px;font-family:inherit}
+textarea{min-height:70px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--gold);color:#1a1408;border:none;border-radius:10px;padding:12px 16px;font-weight:700;font-size:15px;cursor:pointer;width:100%}
+.btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.btn.small{width:auto;padding:7px 12px;font-size:13px}
+.btn.danger{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+.btn:disabled{opacity:.5}
+.score-box{display:flex;align-items:center;gap:10px}
+.score-box input{text-align:center;font-size:22px;font-weight:700}
+.score-box span{font-size:22px;color:var(--gold)}
+.note-block{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px}
+.note-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.note-head b{font-size:14px}
+.stars{display:flex;gap:6px}
+.stars button{width:38px;height:38px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:16px;font-weight:700;cursor:pointer}
+.stars button.on{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+.note-block textarea{min-height:56px;margin-top:8px}
+.tabs{position:fixed;bottom:0;left:0;right:0;z-index:10;display:flex;background:#14110d;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs button{flex:1;background:none;border:none;color:var(--muted);padding:10px 4px 12px;font-size:12px;cursor:pointer;position:relative}
+.tabs button .ic{display:block;font-size:19px;margin-bottom:2px}
+.tabs button.on{color:var(--gold)}
+.dot{position:absolute;top:6px;right:calc(50% - 18px);width:9px;height:9px;border-radius:50%;background:var(--bad)}
+.match{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer}
+.match-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.match-top .t{font-weight:700}
+.match-top .s{color:var(--muted);font-size:12px}
+.res{font-weight:800;font-size:18px;white-space:nowrap}
+.res.V{color:var(--ok)}.res.N{color:var(--warn)}.res.D{color:var(--bad)}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.pill{font-size:12px;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:3px 9px;color:var(--beige)}
+.pill b{color:var(--gold)}
+.detail{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px;font-size:14px}
+.detail p{margin:4px 0 10px;white-space:pre-wrap;color:var(--beige)}
+.detail .k{color:var(--gold);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.educ-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;background:var(--card2);border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer}
+.educ-row .n{font-weight:700}.educ-row .e{font-size:12px;color:var(--muted)}
+.badge{font-size:11px;border-radius:20px;padding:3px 8px;white-space:nowrap}
+.badge.ok{background:rgba(95,178,122,.15);color:var(--ok)}
+.badge.miss{background:rgba(201,87,74,.15);color:var(--bad)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 6px;text-align:center}
+.stat b{display:block;font-size:20px;color:var(--gold)}
+.stat span{font-size:11px;color:var(--muted)}
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 210px);min-height:320px}
+.msgs{flex:1;overflow-y:auto;padding:6px 2px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:80%;padding:9px 12px;border-radius:14px;font-size:14px;white-space:pre-wrap;word-wrap:break-word}
+.msg.me{align-self:flex-end;background:var(--gold);color:#1a1408;border-bottom-right-radius:4px}
+.msg.them{align-self:flex-start;background:var(--card2);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg small{display:block;font-size:10px;opacity:.65;margin-top:3px}
+.chat-in{display:flex;gap:8px;margin-top:10px}
+.chat-in textarea{min-height:44px;height:44px}
+.chat-in .btn{width:auto}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login .card{max-width:380px;width:100%;text-align:center;padding:28px 22px}
+.logo{font-size:13px;letter-spacing:.3em;color:var(--gold);margin-bottom:6px}
+.login h2{font-size:22px;color:var(--beige);text-transform:none;letter-spacing:0;margin-bottom:8px}
+.login p{color:var(--muted);font-size:14px;margin-bottom:20px}
+.err{color:var(--bad);font-size:13px;margin-top:12px}
+.toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:var(--gold);color:#1a1408;padding:10px 16px;border-radius:10px;font-weight:700;z-index:50;font-size:14px}
+.muted{color:var(--muted);font-size:13px}
+.backlink{color:var(--gold);font-size:14px;cursor:pointer;margin-bottom:12px;display:inline-block}
+.filter{display:flex;gap:8px;margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="vLogin" class="login">
+  <div class="card">
+    <div class="logo">Y.E.S.I · SUIVI</div>
+    <h2>Suivi Éducateurs</h2>
+    <p>Rapports de match du week-end.<br>Accès réservé aux éducateurs autorisés.</p>
+    <button class="btn" id="btnLogin">Se connecter avec Google</button>
+    <div class="err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="vApp" class="hidden">
+  <header>
+    <h1>Suivi Éducateurs<small id="whoami"></small></h1>
+    <button class="btn ghost small" id="btnLogout">Quitter</button>
+  </header>
+  <main id="main"></main>
+  <nav class="tabs" id="tabs"></nav>
+</div>
+
+<script>
+/* ===== CONFIG ===== */
+const ADMINS = ["yesiconcept.rdv@gmail.com"]; // comptes coordinateur (accès complet)
+window.addEventListener("error", ev => showFatal((ev.message||"Erreur inconnue") + (ev.filename?" ("+ev.filename.split("/").pop()+")":"")));
+window.addEventListener("unhandledrejection", ev => showFatal(ev.reason && (ev.reason.code||ev.reason.message) || "Erreur réseau"));
+function showFatal(msg){
+  const el=document.getElementById("loginErr"); if(!el) return;
+  document.getElementById("vLogin").classList.remove("hidden");
+  let hint="";
+  if(location.protocol==="file:"||location.protocol==="blob:"||!/^https?:$/.test(location.protocol)) hint="<br><br>⚠️ Le fichier est ouvert en local/aperçu. Ouvre-le via le lien GitHub Pages (yesi-concept.github.io/FOCUS-GAME/suivi-educateurs.html).";
+  else if(typeof firebase==="undefined") hint="<br><br>⚠️ Firebase n'a pas pu se charger (réseau ou bloqueur de pub). Recharge la page.";
+  el.innerHTML="Erreur technique : "+String(msg).replace(/[<>&]/g,"")+hint;
+}
+if(typeof firebase==="undefined"){ showFatal("Firebase non chargé"); throw new Error("stop"); }
+if(!/^https?:$/.test(location.protocol)){ showFatal("Environnement non supporté"); }
+firebase.initializeApp({
+  apiKey: "AIzaSyA1NE8TIoR3NafqF39SSOZ3nlJGpXgJ95A",
+  authDomain: "suivi-joueur.firebaseapp.com",
+  projectId: "suivi-joueur",
+  storageBucket: "suivi-joueur.firebasestorage.app",
+  messagingSenderId: "2190589503",
+  appId: "1:2190589503:web:e6df856ce4577d1e41828a"
+});
+const auth = firebase.auth(), db = firebase.firestore();
+const TS = firebase.firestore.FieldValue.serverTimestamp;
+
+/* ===== STATE ===== */
+const S = { user:null, email:"", isAdmin:false, profil:null, tab:"", educs:[], matchs:[], chatMeta:{}, chatWith:null, unsub:[], chatUnsub:null, openMatch:null, filterEduc:"" };
+const NOTES = [
+  {k:"globale", l:"Note globale"},
+  {k:"offensive", l:"Note offensive"},
+  {k:"defensive", l:"Note défensive"},
+  {k:"attitude", l:"Attitude & comportement"}
+];
+
+/* ===== UTILS ===== */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const toast = t => { const d=document.createElement("div"); d.className="toast"; d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),2200); };
+const fmtDate = d => d ? new Date(d+"T12:00:00").toLocaleDateString("fr-FR",{weekday:"short",day:"2-digit",month:"short"}) : "";
+const fmtTs = ts => ts && ts.toDate ? ts.toDate().toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}) : "…";
+const resultat = m => { const a=+m.scoreNous, b=+m.scoreEux; return a>b?"V":a<b?"D":"N"; };
+const avg = (arr,k) => { const v=arr.map(m=>+((m.notes||{})[k]||0)).filter(Boolean); return v.length ? (v.reduce((a,b)=>a+b,0)/v.length).toFixed(1) : "–"; };
+function weekendKey(dateStr){ // lundi de la semaine du match
+  const d=new Date(dateStr+"T12:00:00"); const day=(d.getDay()+6)%7; d.setDate(d.getDate()-day); return d.toISOString().slice(0,10);
+}
+function currentWeekendKey(){ const d=new Date(); const day=(d.getDay()+6)%7; if(day<=1){ d.setDate(d.getDate()-day-7);} else d.setDate(d.getDate()-day); return d.toISOString().slice(0,10); }
+// Lundi/mardi → on regarde encore le week-end qui vient de passer
+
+/* ===== AUTH ===== */
+$("btnLogin").onclick = async () => {
+  $("loginErr").textContent="";
+  const p = new firebase.auth.GoogleAuthProvider(); p.setCustomParameters({prompt:"select_account"});
+  try { await auth.signInWithPopup(p); }
+  catch(e){ if(["auth/popup-blocked","auth/operation-not-supported-in-this-environment"].includes(e.code)) auth.signInWithRedirect(p); else $("loginErr").textContent = "Connexion impossible : "+e.message; }
+};
+$("btnLogout").onclick = () => auth.signOut();
+auth.getRedirectResult().catch(e => $("loginErr").textContent = e.message);
+
+auth.onAuthStateChanged(async u => {
+  S.unsub.forEach(f=>f()); S.unsub=[]; if(S.chatUnsub){S.chatUnsub();S.chatUnsub=null;}
+  if(!u){ $("vApp").classList.add("hidden"); $("vLogin").classList.remove("hidden"); return; }
+  S.user=u; S.email=(u.email||"").toLowerCase(); S.isAdmin=ADMINS.includes(S.email);
+  if(!S.isAdmin){
+    try{
+      const doc = await db.collection("educateurs").doc(S.email).get();
+      if(!doc.exists){ await auth.signOut(); $("loginErr").textContent="Accès refusé : "+S.email+" n'est pas autorisé. Contacte ton coordinateur."; return; }
+      S.profil = doc.data();
+    }catch(e){ await auth.signOut(); $("loginErr").textContent="Accès refusé ("+e.code+")."; return; }
+  }
+  $("vLogin").classList.add("hidden"); $("vApp").classList.remove("hidden");
+  $("whoami").textContent = S.isAdmin ? "Coordinateur · "+S.email : (S.profil.nom||"")+" · "+(S.profil.equipe||"");
+  startListeners();
+  go(S.isAdmin ? "dash" : "form");
+});
+
+/* ===== LISTENERS ===== */
+function startListeners(){
+  if(S.isAdmin){
+    S.unsub.push(db.collection("educateurs").onSnapshot(s=>{ S.educs=s.docs.map(d=>({email:d.id,...d.data()})).sort((a,b)=>(a.equipe||"").localeCompare(b.equipe||"")); refresh(); }));
+    S.unsub.push(db.collection("matchs").onSnapshot(s=>{ S.matchs=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.date||"").localeCompare(a.date||"")); refresh(); }, e=>toast("Erreur lecture : "+e.code)));
+    S.unsub.push(db.collection("chats").onSnapshot(s=>{ S.chatMeta={}; s.docs.forEach(d=>S.chatMeta[d.id]=d.data()); renderTabs(); if(S.tab==="chat"&&!S.chatWith) render(); }));
+  } else {
+    S.unsub.push(db.collection("matchs").where("educEmail","==",S.email).onSnapshot(s=>{ S.matchs=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.date||"").localeCompare(a.date||"")); refresh(); }, e=>toast("Erreur lecture : "+e.code)));
+    S.unsub.push(db.collection("chats").doc(S.email).onSnapshot(d=>{ S.chatMeta[S.email]=d.exists?d.data():{}; renderTabs(); }));
+  }
+}
+function refresh(){ if(S.tab!=="form" && S.tab!=="chat") render(); renderTabs(); }
+function unread(email){
+  const m=S.chatMeta[email]; if(!m||!m.lastTs) return false;
+  const last=m.lastTs.toMillis?m.lastTs.toMillis():0;
+  const seen = S.isAdmin ? (m.seenAdmin?.toMillis?.()||0) : (m.seenEduc?.toMillis?.()||0);
+  return m.lastFrom!==S.email && last>seen;
+}
+
+/* ===== NAV ===== */
+function renderTabs(){
+  const t = S.isAdmin
+    ? [["dash","📊","Tableau"],["matchs","⚽","Matchs"],["chat","💬","Chat"],["acces","🔑","Accès"]]
+    : [["form","✏️","Rapport"],["hist","📋","Historique"],["chat","💬","Chat"]];
+  const chatDot = S.isAdmin ? Object.keys(S.chatMeta).some(unread) : unread(S.email);
+  $("tabs").innerHTML = t.map(([k,ic,l])=>`<button class="${S.tab===k?"on":""}" onclick="go('${k}')"><span class="ic">${ic}</span>${l}${k==="chat"&&chatDot?'<i class="dot"></i>':""}</button>`).join("");
+}
+function go(t){ S.tab=t; if(S.chatUnsub){S.chatUnsub();S.chatUnsub=null;} if(t!=="chat") S.chatWith=null; if(t==="chat"&&!S.isAdmin) S.chatWith=S.email; render(); renderTabs(); window.scrollTo(0,0); }
+function render(){
+  const v = {form:vForm, hist:vHist, dash:vDash, matchs:vMatchs, chat:vChat, acces:vAcces}[S.tab];
+  if(v) v();
+}
+
+/* ===== ÉDUCATEUR : FORMULAIRE ===== */
+let F = {};
+function vForm(editId){
+  const ex = editId ? S.matchs.find(m=>m.id===editId) : null;
+  F = ex ? {notes:{...ex.notes}, id:ex.id} : {notes:{}};
+  const sat = new Date(); const day=(sat.getDay()+6)%7; if(day<5) sat.setDate(sat.getDate()-day-2); else sat.setDate(sat.getDate()-day+5);
+  const v = (k,d="") => esc(ex ? (ex[k]??"") : d);
+  $("main").innerHTML = `
+  <div class="card">
+    <h2>${ex?"Modifier le rapport":"Rapport de match"}</h2>
+    <div class="row">
+      <div><label>Date</label><input type="date" id="fDate" value="${v("date",sat.toISOString().slice(0,10))}"></div>
+      <div><label>Lieu</label><select id="fLieu"><option ${v("lieu")==="Domicile"?"selected":""}>Domicile</option><option ${v("lieu")==="Extérieur"?"selected":""}>Extérieur</option></select></div>
+    </div>
+    <label>Adversaire</label><input id="fAdv" placeholder="Nom du club adverse" value="${v("adversaire")}">
+    <label>Compétition</label><select id="fComp">${["Championnat","Coupe","Amical","Tournoi"].map(c=>`<option ${v("competition")===c?"selected":""}>${c}</option>`).join("")}</select>
+    <label>Score (nous – eux)</label>
+    <div class="score-box"><input type="number" min="0" id="fS1" value="${v("scoreNous","0")}" inputmode="numeric"><span>–</span><input type="number" min="0" id="fS2" value="${v("scoreEux","0")}" inputmode="numeric"></div>
+    <label>Buteurs / passeurs</label><input id="fBut" placeholder="Ex : Yanis x2, Moussa (pd Adam)" value="${v("buteurs")}">
+
+    <h3>Composition</h3>
+    <label>Système</label><select id="fSys">${["4-3-3","4-2-3-1","4-4-2","4-4-2 losange","3-5-2","3-4-3","5-3-2","4-1-4-1","Foot à 8","Foot à 5","Autre"].map(c=>`<option ${v("systeme")===c?"selected":""}>${c}</option>`).join("")}</select>
+    <label>Titulaires (poste – joueur)</label><textarea id="fTit" placeholder="GB – Lucas&#10;DD – Ibra&#10;DC – Sami&#10;...">${v("titulaires")}</textarea>
+    <label>Remplaçants / entrées</label><textarea id="fRemp" placeholder="Adam (60'), Noah (70')...">${v("remplacants")}</textarea>
+    <label>Absents / blessés</label><input id="fAbs" value="${v("absents")}">
+
+    <h3>Évaluation de l'équipe</h3>
+    ${NOTES.map(n=>`
+    <div class="note-block">
+      <div class="note-head"><b>${n.l}</b><span class="muted" id="lbl_${n.k}">${F.notes[n.k]?F.notes[n.k]+"/5":"–"}</span></div>
+      <div class="stars" id="st_${n.k}">${[1,2,3,4,5].map(i=>`<button type="button" class="${(F.notes[n.k]||0)>=i?"on":""}" onclick="setNote('${n.k}',${i})">${i}</button>`).join("")}</div>
+      <textarea id="c_${n.k}" placeholder="Commentaire…">${esc(ex?(ex.commentaires||{})[n.k]:"")}</textarea>
+    </div>`).join("")}
+
+    <label>Bilan libre / points à travailler</label><textarea id="fBilan" style="min-height:90px">${v("bilan")}</textarea>
+    <div style="margin-top:16px"><button class="btn" id="btnSave" onclick="saveMatch()">${ex?"Enregistrer les modifications":"Envoyer le rapport"}</button></div>
+    ${ex?`<div style="margin-top:8px"><button class="btn ghost" onclick="go('hist')">Annuler</button></div>`:""}
+  </div>`;
+}
+function setNote(k,i){ F.notes[k]=i; $("st_"+k).querySelectorAll("button").forEach((b,j)=>b.classList.toggle("on",j<i)); $("lbl_"+k).textContent=i+"/5"; }
+async function saveMatch(){
+  const d = {
+    date:$("fDate").value, lieu:$("fLieu").value, adversaire:$("fAdv").value.trim(), competition:$("fComp").value,
+    scoreNous:+$("fS1").value||0, scoreEux:+$("fS2").value||0, buteurs:$("fBut").value.trim(),
+    systeme:$("fSys").value, titulaires:$("fTit").value.trim(), remplacants:$("fRemp").value.trim(), absents:$("fAbs").value.trim(),
+    notes:F.notes, commentaires:Object.fromEntries(NOTES.map(n=>[n.k,$("c_"+n.k).value.trim()])), bilan:$("fBilan").value.trim(),
+  };
+  if(!d.date||!d.adversaire) return toast("Date et adversaire obligatoires");
+  const miss = NOTES.filter(n=>!d.notes[n.k]); if(miss.length) return toast("Note manquante : "+miss[0].l);
+  if(!d.titulaires) return toast("Composition obligatoire");
+  $("btnSave").disabled=true;
+  try{
+    if(F.id){ await db.collection("matchs").doc(F.id).update({...d, modifieLe:TS()}); toast("Rapport modifié ✓"); }
+    else{ await db.collection("matchs").add({...d, educEmail:S.email, educNom:S.profil.nom||"", equipe:S.profil.equipe||"", creeLe:TS()}); toast("Rapport envoyé ✓"); }
+    go("hist");
+  }catch(e){ toast("Erreur : "+e.code); $("btnSave").disabled=false; }
+}
+
+/* ===== CARTES MATCH ===== */
+function matchCard(m, showEduc){
+  const r=resultat(m), open=S.openMatch===m.id, c=m.commentaires||{};
+  return `<div class="match" onclick="toggleMatch('${m.id}')">
+    <div class="match-top">
+      <div><div class="t">${showEduc?esc(m.equipe)+" · ":""}${m.lieu==="Extérieur"?"@ ":"vs "}${esc(m.adversaire)}</div>
+      <div class="s">${fmtDate(m.date)} · ${esc(m.competition)}${showEduc?" · "+esc(m.educNom):""}</div></div>
+      <div class="res ${r}">${m.scoreNous} – ${m.scoreEux}</div>
+    </div>
+    <div class="pills">${NOTES.map(n=>`<span class="pill">${n.l.replace("Note ","").replace(" & comportement","")} <b>${(m.notes||{})[n.k]||"–"}/5</b></span>`).join("")}</div>
+    ${open?`<div class="detail" onclick="event.stopPropagation()">
+      ${m.buteurs?`<div class="k">Buteurs / passeurs</div><p>${esc(m.buteurs)}</p>`:""}
+      <div class="k">Compo · ${esc(m.systeme)}</div><p>${esc(m.titulaires)}</p>
+      ${m.remplacants?`<div class="k">Remplaçants</div><p>${esc(m.remplacants)}</p>`:""}
+      ${m.absents?`<div class="k">Absents</div><p>${esc(m.absents)}</p>`:""}
+      ${NOTES.map(n=>`<div class="k">${n.l} · ${(m.notes||{})[n.k]||"–"}/5</div><p>${esc(c[n.k])||'<span class="muted">—</span>'}</p>`).join("")}
+      ${m.bilan?`<div class="k">Bilan</div><p>${esc(m.bilan)}</p>`:""}
+      ${!S.isAdmin?`<button class="btn ghost small" onclick="S.tab='form';renderTabs();vForm('${m.id}')">Modifier</button>`:
+        `<button class="btn ghost small" onclick="openChat('${esc(m.educEmail)}')">💬 Écrire à ${esc(m.educNom)}</button>`}
+    </div>`:""}
+  </div>`;
+}
+function toggleMatch(id){ S.openMatch = S.openMatch===id?null:id; render(); }
+
+/* ===== ÉDUCATEUR : HISTORIQUE ===== */
+function vHist(){
+  const M=S.matchs;
+  $("main").innerHTML = `<div class="card"><h2>Mes matchs (${M.length})</h2>${statsBlock(M)}</div>
+  <div class="card">${M.length?M.map(m=>matchCard(m,false)).join(""):'<p class="muted">Aucun rapport envoyé pour l\'instant.</p>'}</div>`;
+}
+function statsBlock(M){
+  const v=M.filter(m=>resultat(m)==="V").length, n=M.filter(m=>resultat(m)==="N").length, d=M.filter(m=>resultat(m)==="D").length;
+  return `<div class="stats" style="margin-bottom:8px">
+    <div class="stat"><b>${M.length}</b><span>Matchs</span></div>
+    <div class="stat"><b style="color:var(--ok)">${v}</b><span>Victoires</span></div>
+    <div class="stat"><b style="color:var(--warn)">${n}</b><span>Nuls</span></div>
+    <div class="stat"><b style="color:var(--bad)">${d}</b><span>Défaites</span></div></div>
+  <div class="stats">${NOTES.map(x=>`<div class="stat"><b>${avg(M,x.k)}</b><span>${x.l.replace("Note ","").replace(" & comportement","")}</span></div>`).join("")}</div>`;
+}
+
+/* ===== ADMIN : TABLEAU ===== */
+function vDash(){
+  const wk=currentWeekendKey();
+  const rows = S.educs.map(e=>{
+    const mine=S.matchs.filter(m=>m.educEmail===e.email);
+    const done=mine.some(m=>weekendKey(m.date)===wk);
+    return `<div class="educ-row" onclick="S.filterEduc='${esc(e.email)}';go('matchs')">
+      <div><div class="n">${esc(e.equipe||"—")} · ${esc(e.nom||"")}</div><div class="e">${mine.length} match(s) · moy. globale ${avg(mine,"globale")}/5</div></div>
+      <span class="badge ${done?"ok":"miss"}">${done?"Rapport reçu":"En attente"}</span></div>`;
+  }).join("");
+  const recus=S.educs.filter(e=>S.matchs.some(m=>m.educEmail===e.email&&weekendKey(m.date)===wk)).length;
+  $("main").innerHTML = `
+  <div class="card"><h2>Week-end du ${fmtDate(wk).replace(/^\S+ /,"")}</h2>
+    <p class="muted" style="margin-bottom:12px">${recus}/${S.educs.length} rapports reçus</p>
+    ${rows||'<p class="muted">Aucun éducateur. Ajoute-les dans l\'onglet Accès.</p>'}</div>
+  <div class="card"><h2>Vue club (${S.matchs.length} matchs)</h2>${statsBlock(S.matchs)}</div>`;
+}
+
+/* ===== ADMIN : MATCHS ===== */
+function vMatchs(){
+  const M = S.filterEduc ? S.matchs.filter(m=>m.educEmail===S.filterEduc) : S.matchs;
+  const e = S.educs.find(x=>x.email===S.filterEduc);
+  $("main").innerHTML = `
+  <div class="filter"><select onchange="S.filterEduc=this.value;render()">
+    <option value="">Toutes les équipes</option>
+    ${S.educs.map(x=>`<option value="${esc(x.email)}" ${x.email===S.filterEduc?"selected":""}>${esc(x.equipe)} · ${esc(x.nom)}</option>`).join("")}
+  </select></div>
+  ${e?`<div class="card"><h2>${esc(e.equipe)} · ${esc(e.nom)}</h2>${statsBlock(M)}<div style="margin-top:12px"><button class="btn ghost" onclick="openChat('${esc(e.email)}')">💬 Ouvrir le chat</button></div></div>`:""}
+  <div class="card">${M.length?M.map(m=>matchCard(m,true)).join(""):'<p class="muted">Aucun rapport.</p>'}</div>`;
+}
+
+/* ===== CHAT ===== */
+function openChat(email){ S.tab="chat"; S.chatWith=email; renderTabs(); vChat(); }
+function vChat(){
+  if(S.isAdmin && !S.chatWith){
+    $("main").innerHTML = `<div class="card"><h2>Messagerie</h2>${S.educs.map(e=>{
+      const m=S.chatMeta[e.email]||{};
+      return `<div class="educ-row" onclick="openChat('${esc(e.email)}')"><div><div class="n">${esc(e.equipe)} · ${esc(e.nom)}</div>
+      <div class="e">${m.lastText?esc(m.lastText.slice(0,50)):"Aucun message"}</div></div>${unread(e.email)?'<span class="badge miss">Nouveau</span>':""}</div>`;}).join("")||'<p class="muted">Aucun éducateur.</p>'}</div>`;
+    return;
+  }
+  const who = S.isAdmin ? S.educs.find(e=>e.email===S.chatWith) : null;
+  $("main").innerHTML = `
+  ${S.isAdmin?`<span class="backlink" onclick="S.chatWith=null;go('chat')">← Conversations</span>`:""}
+  <div class="card"><h2>${S.isAdmin?esc((who?.equipe||"")+" · "+(who?.nom||S.chatWith)):"Coordinateur"}</h2>
+    <div class="chat-wrap"><div class="msgs" id="msgs"><p class="muted">Chargement…</p></div>
+    <div class="chat-in"><textarea id="chatTxt" placeholder="Message…"></textarea><button class="btn" onclick="sendMsg()">➤</button></div></div>
+  </div>`;
+  const ref = db.collection("chats").doc(S.chatWith);
+  if(S.chatUnsub) S.chatUnsub();
+  S.chatUnsub = ref.collection("messages").orderBy("ts").limitToLast(200).onSnapshot(s=>{
+    const box=$("msgs"); if(!box) return;
+    box.innerHTML = s.docs.length ? s.docs.map(d=>{const m=d.data();return `<div class="msg ${m.from===S.email?"me":"them"}">${esc(m.text)}<small>${fmtTs(m.ts)}</small></div>`;}).join("") : '<p class="muted">Aucun message. Lance la conversation.</p>';
+    box.scrollTop=box.scrollHeight;
+    ref.set(S.isAdmin?{seenAdmin:TS()}:{seenEduc:TS()},{merge:true}).catch(()=>{});
+  }, e=>{ const b=$("msgs"); if(b) b.innerHTML='<p class="err">Erreur : '+e.code+'</p>'; });
+}
+async function sendMsg(){
+  const t=$("chatTxt").value.trim(); if(!t) return; $("chatTxt").value="";
+  const ref=db.collection("chats").doc(S.chatWith);
+  try{
+    await ref.collection("messages").add({text:t, from:S.email, ts:TS()});
+    await ref.set({lastText:t, lastFrom:S.email, lastTs:TS(), ...(S.isAdmin?{seenAdmin:TS()}:{seenEduc:TS()})},{merge:true});
+  }catch(e){ toast("Envoi impossible : "+e.code); $("chatTxt").value=t; }
+}
+
+/* ===== ADMIN : ACCÈS ===== */
+function vAcces(){
+  $("main").innerHTML = `
+  <div class="card"><h2>Ajouter un éducateur</h2>
+    <label>Email Google</label><input id="aEmail" type="email" placeholder="prenom.nom@gmail.com" autocapitalize="off">
+    <div class="row"><div><label>Nom</label><input id="aNom" placeholder="Prénom Nom"></div>
+    <div><label>Équipe</label><input id="aEq" placeholder="U15 A"></div></div>
+    <div style="margin-top:14px"><button class="btn" onclick="addEduc()">Donner l'accès</button></div>
+  </div>
+  <div class="card"><h2>Éducateurs autorisés (${S.educs.length})</h2>
+    ${S.educs.map(e=>`<div class="educ-row" style="cursor:default"><div><div class="n">${esc(e.equipe)} · ${esc(e.nom)}</div><div class="e">${esc(e.email)}</div></div>
+    <button class="btn danger small" onclick="delEduc('${esc(e.email)}')">Retirer</button></div>`).join("")||'<p class="muted">Aucun.</p>'}
+    <p class="muted" style="margin-top:10px">Lien à envoyer aux éducateurs : <b style="color:var(--gold)">${esc(location.href.split("#")[0])}</b></p>
+  </div>`;
+}
+async function addEduc(){
+  const email=$("aEmail").value.trim().toLowerCase(), nom=$("aNom").value.trim(), equipe=$("aEq").value.trim();
+  if(!/^\S+@\S+\.\S+$/.test(email)||!nom||!equipe) return toast("Email, nom et équipe obligatoires");
+  try{ await db.collection("educateurs").doc(email).set({nom,equipe,ajouteLe:TS()}); toast("Accès donné ✓"); }
+  catch(e){ toast("Erreur : "+e.code); }
+}
+async function delEduc(email){
+  if(!confirm("Retirer l'accès de "+email+" ? Ses rapports sont conservés.")) return;
+  try{ await db.collection("educateurs").doc(email).delete(); toast("Accès retiré"); }catch(e){ toast("Erreur : "+e.code); }
+}
+</script>
+</body>
+</html>
