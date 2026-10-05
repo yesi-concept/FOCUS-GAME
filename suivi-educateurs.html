@@ -69,7 +69,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .stat{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 6px;text-align:center}
 .stat b{display:block;font-size:20px;color:var(--gold)}
 .stat span{font-size:11px;color:var(--muted)}
-.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 210px);min-height:320px}
+.chat-wrap{display:flex;flex-direction:column;height:calc(100dvh - 300px);min-height:300px}
 .msgs{flex:1;overflow-y:auto;padding:6px 2px;display:flex;flex-direction:column;gap:8px}
 .msg{max-width:80%;padding:9px 12px;border-radius:14px;font-size:14px;white-space:pre-wrap;word-wrap:break-word}
 .msg.me{align-self:flex-end;background:var(--gold);color:#1a1408;border-bottom-right-radius:4px}
@@ -157,9 +157,11 @@ const fmtTs = ts => ts && ts.toDate ? ts.toDate().toLocaleString("fr-FR",{day:"2
 const resultat = m => { const a=+m.scoreNous, b=+m.scoreEux; return a>b?"V":a<b?"D":"N"; };
 const avg = (arr,k) => { const v=arr.map(m=>+((m.notes||{})[k]||0)).filter(Boolean); return v.length ? (v.reduce((a,b)=>a+b,0)/v.length).toFixed(1) : "–"; };
 function weekendKey(dateStr){ // lundi de la semaine du match
-  const d=new Date(dateStr+"T12:00:00"); const day=(d.getDay()+6)%7; d.setDate(d.getDate()-day); return d.toISOString().slice(0,10);
+  const d=new Date(dateStr+"T12:00:00"); const day=(d.getDay()+6)%7; d.setDate(d.getDate()-day); return isoLocal(d);
 }
-function currentWeekendKey(){ const d=new Date(); const day=(d.getDay()+6)%7; if(day<=1){ d.setDate(d.getDate()-day-7);} else d.setDate(d.getDate()-day); return d.toISOString().slice(0,10); }
+function isoLocal(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function currentWeekendKey(){ const d=new Date(); d.setHours(12,0,0,0); const day=(d.getDay()+6)%7; if(day<=1){ d.setDate(d.getDate()-day-7);} else d.setDate(d.getDate()-day); return isoLocal(d); }
+function weekendLabel(k){ const a=new Date(k+"T12:00:00"); a.setDate(a.getDate()+5); const b=new Date(a); b.setDate(b.getDate()+1); return a.getDate()+"-"+b.toLocaleDateString("fr-FR",{day:"numeric",month:"short"}); }
 // Lundi/mardi → on regarde encore le week-end qui vient de passer
 
 /* ===== AUTH ===== */
@@ -227,13 +229,13 @@ let F = {};
 function vForm(editId){
   const ex = editId ? S.matchs.find(m=>m.id===editId) : null;
   F = ex ? {notes:{...ex.notes}, id:ex.id} : {notes:{}};
-  const sat = new Date(); const day=(sat.getDay()+6)%7; if(day<5) sat.setDate(sat.getDate()-day-2); else sat.setDate(sat.getDate()-day+5);
+  const sat = new Date(); sat.setHours(12,0,0,0); const day=(sat.getDay()+6)%7; if(day<5) sat.setDate(sat.getDate()-day-2); else sat.setDate(sat.getDate()-day+5);
   const v = (k,d="") => esc(ex ? (ex[k]??"") : d);
   $("main").innerHTML = `
   <div class="card">
     <h2>${ex?"Modifier le rapport":"Rapport de match"}</h2>
     <div class="row">
-      <div><label>Date</label><input type="date" id="fDate" value="${v("date",sat.toISOString().slice(0,10))}"></div>
+      <div><label>Date</label><input type="date" id="fDate" value="${v("date",isoLocal(sat))}"></div>
       <div><label>Lieu</label><select id="fLieu"><option ${v("lieu")==="Domicile"?"selected":""}>Domicile</option><option ${v("lieu")==="Extérieur"?"selected":""}>Extérieur</option></select></div>
     </div>
     <label>Adversaire</label><input id="fAdv" placeholder="Nom du club adverse" value="${v("adversaire")}">
@@ -332,7 +334,7 @@ function vDash(){
   }).join("");
   const recus=S.educs.filter(e=>S.matchs.some(m=>m.educEmail===e.email&&weekendKey(m.date)===wk)).length;
   $("main").innerHTML = `
-  <div class="card"><h2>Week-end du ${fmtDate(wk).replace(/^\S+ /,"")}</h2>
+  <div class="card"><h2>Week-end du ${weekendLabel(wk)}</h2>
     <p class="muted" style="margin-bottom:12px">${recus}/${S.educs.length} rapports reçus</p>
     ${rows||'<p class="muted">Aucun éducateur. Ajoute-les dans l\'onglet Accès.</p>'}</div>
   <div class="card"><h2>Vue club (${S.matchs.length} matchs)</h2>${statsBlock(S.matchs)}</div>`;
