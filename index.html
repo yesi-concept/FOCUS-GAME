@@ -180,6 +180,55 @@ nav.tabs button.active{color:var(--gold-soft);}
   #printReport .rp-eval{break-inside:avoid; page-break-inside:avoid;}
   #printReport .rp-bilan{break-inside:avoid; page-break-inside:avoid;}
 }
+
+/* ---------- SUIVI QUOTIDIEN / COACH / CHAT ---------- */
+.q-item{background:var(--bg2); border:1px solid var(--border); border-radius:9px; padding:11px; margin-top:10px;}
+.q-ihead{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:14px;}
+.q-val{font-size:12px; color:var(--gold-soft);}
+.q-notes{display:flex; gap:6px; margin-bottom:8px;}
+.q-nb,.q-rasb{flex:1; height:40px; border-radius:8px; border:1px solid var(--border); background:var(--card2); color:var(--ink-dim); font-size:15px; font-weight:700; cursor:pointer;}
+.q-rasb{flex:1.4; font-size:12px; letter-spacing:.5px;}
+.q-nb.on{background:var(--gold); color:#1c1710; border-color:var(--gold);}
+.q-rasb.on{background:var(--ink-dim); color:#000; border-color:var(--ink-dim);}
+.q-item textarea{min-height:48px;}
+.q-wnav{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:8px;}
+.q-wnav .btn{margin:0; min-width:40px;}
+.q-weeknote{display:flex; align-items:center; gap:14px; margin:6px 0 4px;}
+.q-big{font-family:Georgia,serif; font-size:46px; line-height:1; color:var(--gold-soft);}
+.q-big span{font-size:16px; color:var(--ink-dim);}
+.q-weeklabel{font-size:13px; color:var(--ink);}
+.q-gridwrap{overflow-x:auto; margin:12px 0 6px;}
+.q-grid{width:100%; border-collapse:separate; border-spacing:3px; font-size:12px;}
+.q-grid th{color:var(--ink-dim); font-weight:500; font-size:11px; text-align:center;}
+.q-grid th small{font-size:10px;}
+.q-grid th.q-today{color:var(--gold-soft);}
+.q-rowl{white-space:nowrap; color:var(--ink); font-size:11.5px; padding-right:4px;}
+.q-cell{text-align:center; height:32px; min-width:30px; border-radius:6px; background:var(--card2); font-weight:700; cursor:pointer;}
+.q-na{color:#444; background:transparent;}
+.q-wait{color:var(--ink-dim);}
+.q-ras{color:#000; background:var(--ink-dim); font-size:9.5px;}
+.q-zero{background:rgba(198,95,82,.25); color:var(--danger); border:1px solid var(--danger);}
+.q-n1,.q-n2{color:var(--danger);} .q-n3{color:var(--warn);} .q-n4,.q-n5{color:#1c1710; background:var(--gold);}
+.good{color:var(--success)!important;} .mid{color:var(--warn)!important;} .bad{color:var(--danger)!important;}
+.q-red{color:var(--danger);}
+.q-objcat{font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--gold); margin:10px 0 4px;}
+.q-obj{font-size:14px; padding:3px 0;}
+.q-objrow{display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;}
+.q-tag{font-size:10.5px; border:1px solid var(--gold); color:var(--gold-soft); border-radius:12px; padding:2px 8px; white-space:nowrap;}
+.q-dd{margin-top:10px; font-size:13.5px;} .q-dd p{margin:4px 0 0; white-space:pre-wrap; color:var(--ink-dim);}
+.q-daybox{background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:11px; margin-top:8px;}
+.q-prow{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:12px; background:var(--bg2); border:1px solid var(--border); border-radius:9px; margin-bottom:8px; cursor:pointer;}
+.q-badge{font-size:11px; border-radius:12px; padding:3px 9px; white-space:nowrap; border:1px solid currentColor;}
+.q-back{display:inline-block; color:var(--gold-soft); font-size:14px; margin-bottom:12px; cursor:pointer;}
+.q-chat{display:flex; flex-direction:column; height:calc(100dvh - 300px); min-height:300px;}
+.q-msgs{flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding:4px 2px;}
+.q-msg{max-width:80%; padding:9px 12px; border-radius:13px; font-size:14px; white-space:pre-wrap; word-wrap:break-word;}
+.q-msg.me{align-self:flex-end; background:var(--gold); color:#1c1710; border-bottom-right-radius:4px;}
+.q-msg.them{align-self:flex-start; background:var(--card2); border:1px solid var(--border); border-bottom-left-radius:4px;}
+.q-msg small{display:block; font-size:10px; opacity:.65; margin-top:3px;}
+.q-chatin{display:flex; gap:8px; margin-top:10px;} .q-chatin textarea{min-height:44px; height:44px;} .q-chatin .btn{flex:0 0 52px;}
+.q-dotted{position:relative;} .q-dotted::after{content:""; position:absolute; top:6px; right:calc(50% - 18px); width:9px; height:9px; border-radius:50%; background:var(--danger);}
+.q-toast{position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:var(--gold); color:#1c1710; padding:10px 16px; border-radius:9px; font-weight:600; font-size:13.5px; z-index:200; max-width:90%; text-align:center;}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js" crossorigin="anonymous"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js" crossorigin="anonymous"></script>
@@ -228,8 +277,14 @@ nav.tabs button.active{color:var(--gold-soft);}
 
 <div class="wrap">
 
+  <!-- QUOTIDIEN -->
+  <div class="view active" id="view-quotidien"><div id="quotidienContent"><p class="muted">Chargement…</p></div></div>
+
+  <!-- CHAT -->
+  <div class="view" id="view-chat"><div id="chatContent"></div></div>
+
   <!-- IDENTITÉ -->
-  <div class="view active" id="view-identite">
+  <div class="view" id="view-identite">
     <div class="card">
       <h2>Identité du joueur</h2>
       <div class="row">
@@ -293,11 +348,24 @@ nav.tabs button.active{color:var(--gold-soft);}
 </div>
 
 <nav class="tabs no-print">
-  <button class="tab-btn active" data-view="identite"><span class="ic">🪪</span>Identité</button>
-  <button class="tab-btn" data-view="suivi"><span class="ic">📋</span>Suivi</button>
+  <button class="tab-btn active" data-view="quotidien"><span class="ic">📅</span>Quotidien</button>
+  <button class="tab-btn" data-view="suivi"><span class="ic">📋</span>Semaines</button>
   <button class="tab-btn" data-view="bilan"><span class="ic">📊</span>Bilan</button>
+  <button class="tab-btn" data-view="chat"><span class="ic">💬</span>Chat</button>
+  <button class="tab-btn" data-view="identite"><span class="ic">🪪</span>Identité</button>
 </nav>
 </div><!-- /appRoot -->
+
+<div id="coachRoot" style="display:none;">
+<header class="top">
+  <div class="brand">
+    <div class="brand-left"><div><h1>Espace Coach</h1><small>Y.E.S.I CONCEPT — suivi quotidien des joueurs</small></div></div>
+    <button class="theme-btn" id="coachSignOut" title="Se déconnecter">🚪</button>
+  </div>
+</header>
+<div class="wrap" id="coachMain"></div>
+<nav class="tabs" id="coachTabs"></nav>
+</div>
 
 <form id="formsubmitHelper" style="display:none;"></form>
 
@@ -416,6 +484,7 @@ async function initStateForUser(){
 auth.onAuthStateChanged(async (user)=>{
   if(!user){
     userDocId = null;
+    stopPlayerExtras(); stopCoach();
     document.getElementById("appRoot").style.display = "none";
     document.getElementById("authGate").style.display = "flex";
     showAuthStep("login");
@@ -423,6 +492,11 @@ auth.onAuthStateChanged(async (user)=>{
   }
   showAuthStep("loading");
   const email = (user.email || "").toLowerCase();
+  if(email === ADMIN_EMAIL){
+    document.getElementById("authGate").style.display = "none";
+    startCoach();
+    return;
+  }
   try{
     const wlDoc = await db.collection("whitelist").doc(email).get();
     if(!wlDoc.exists){
@@ -439,6 +513,7 @@ auth.onAuthStateChanged(async (user)=>{
   await initStateForUser();
   document.getElementById("authGate").style.display = "none";
   document.getElementById("appRoot").style.display = "block";
+  startPlayerExtras(email);
 });
 
 // ---------- THEME ----------
@@ -887,6 +962,377 @@ document.getElementById("exportHtml").addEventListener("click", ()=>{
   a.download = `bilan-${(i.nom||'joueur').toLowerCase()}-${new Date().toISOString().slice(0,10)}.html`;
   a.click();
 });
+
+
+// =====================================================================
+// ===== SUIVI QUOTIDIEN · OBJECTIFS COACH · CHAT · ESPACE COACH =====
+// =====================================================================
+const ADMIN_EMAIL = "yesiconcept.rdv@gmail.com";
+const ITEMS = [
+  {k:"mental", l:"Mental", ic:"🧠"},
+  {k:"rigueur", l:"Rigueur", ic:"🎯"},
+  {k:"discipline", l:"Discipline", ic:"⚖️"}
+];
+const CATS = ["Général","Mental","Rigueur","Discipline"];
+// R.A.S : null = l'item n'est pas compté dans la moyenne (ni 0, ni bonus).
+// Mettre par ex. 3 pour qu'un R.A.S compte comme un 3/5.
+const RAS_VALEUR = null;
+const JOURS_COURTS = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
+const TSV = () => firebase.firestore.FieldValue.serverTimestamp();
+
+const Q = { email:null, days:{}, cfg:{}, chatMeta:{}, weekOffset:0, draft:null, unsub:[], chatUnsub:null };
+const C = { players:[], data:{}, cfgs:{}, meta:{}, idents:{}, sel:null, tab:"joueurs", weekOffset:0, chatWith:null, unsub:[], subUnsub:[], chatUnsub:null, openDay:null };
+
+const escH = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function isoLocal(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function todayIso(){ return isoLocal(new Date()); }
+function mondayOf(iso, offset){ const d=new Date(iso+"T12:00:00"); d.setDate(d.getDate()-((d.getDay()+6)%7)+7*(offset||0)); return isoLocal(d); }
+function addDays(iso,n){ const d=new Date(iso+"T12:00:00"); d.setDate(d.getDate()+n); return isoLocal(d); }
+function weekDays(monday){ return [0,1,2,3,4,5,6].map(i=>addDays(monday,i)); }
+function frDate(iso, opts){ return new Date(iso+"T12:00:00").toLocaleDateString("fr-FR", opts||{weekday:"long",day:"numeric",month:"long"}); }
+function fmtStamp(ts){ return ts && ts.toDate ? ts.toDate().toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}) : "…"; }
+function qToast(t){ const d=document.createElement("div"); d.className="q-toast"; d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),2400); }
+
+// ---------- CALCUL DES NOTES ----------
+function debutSuivi(days, cfg){
+  if(cfg && cfg.debut) return cfg.debut;
+  const k = Object.keys(days||{}).sort();
+  return k.length ? k[0] : todayIso();
+}
+// Valeur d'un item pour un jour : nombre (0-5), "RAS", "…" (aujourd'hui pas encore rempli) ou null (non compté)
+function itemValue(days, iso, k, debut){
+  const today = todayIso();
+  if(iso > today || iso < debut) return null;
+  const d = days[iso], v = d && d.items && d.items[k];
+  if(v && v.ras) return "RAS";
+  if(v && v.n) return v.n;
+  return iso === today ? "…" : 0;
+}
+function weekScore(days, monday, cfg){
+  const debut = debutSuivi(days, cfg), per = {}, all = [];
+  let manques = 0, joursComptes = 0;
+  ITEMS.forEach(it => per[it.k] = []);
+  weekDays(monday).forEach(iso => {
+    let compte = false;
+    ITEMS.forEach(it => {
+      const v = itemValue(days, iso, it.k, debut);
+      if(v === null || v === "…") return;
+      compte = true;
+      let n = v;
+      if(v === "RAS"){ if(RAS_VALEUR === null) return; n = RAS_VALEUR; }
+      if(n === 0) manques++;
+      per[it.k].push(n); all.push(n);
+    });
+    if(compte) joursComptes++;
+  });
+  const avg = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
+  const res = { note: avg(all), manques, joursComptes, items:{} };
+  ITEMS.forEach(it => res.items[it.k] = avg(per[it.k]));
+  return res;
+}
+const fmtNote = n => n === null || n === undefined ? "—" : (Math.round(n*10)/10).toFixed(1).replace(".0","");
+function noteClass(n){ if(n===null||n===undefined) return ""; return n<2 ? "bad" : n<3.5 ? "mid" : "good"; }
+
+// ---------- COMPOSANTS PARTAGÉS ----------
+function weekGridHtml(days, cfg, monday, clickable){
+  const debut = debutSuivi(days, cfg), today = todayIso();
+  const head = `<tr><th></th>${weekDays(monday).map((iso,i)=>`<th class="${iso===today?'q-today':''}">${JOURS_COURTS[i]}<br><small>${iso.slice(8)}</small></th>`).join("")}</tr>`;
+  const rows = ITEMS.map(it => `<tr><td class="q-rowl">${it.ic} ${it.l}</td>${weekDays(monday).map(iso=>{
+    const v = itemValue(days, iso, it.k, debut);
+    let cls="q-cell", txt="";
+    if(v===null){ cls+=" q-na"; txt="·"; }
+    else if(v==="…"){ cls+=" q-wait"; txt="…"; }
+    else if(v==="RAS"){ cls+=" q-ras"; txt="RAS"; }
+    else if(v===0){ cls+=" q-zero"; txt="0"; }
+    else { cls+=" q-n"+v; txt=v; }
+    return `<td class="${cls}" ${clickable?`onclick="${clickable}('${iso}')"`:""}>${txt}</td>`;
+  }).join("")}</tr>`).join("");
+  return `<div class="q-gridwrap"><table class="q-grid">${head}${rows}</table></div>`;
+}
+function weekSummaryHtml(ws){
+  return `<div class="q-weeknote">
+    <div class="q-big ${noteClass(ws.note)}">${fmtNote(ws.note)}<span>/5</span></div>
+    <div class="q-weeklabel">Note de la semaine<br><small>${ws.manques ? `<b class="q-red">${ws.manques} pénalité${ws.manques>1?"s":""} (0)</b>` : "Aucune pénalité"}</small></div>
+  </div>
+  <div class="notegrid" style="grid-template-columns:repeat(3,1fr)">${ITEMS.map(it=>`<div class="notebox"><div class="v ${noteClass(ws.items[it.k])}">${fmtNote(ws.items[it.k])}</div><div class="l">${it.l}</div></div>`).join("")}</div>`;
+}
+function objectifsHtml(cfg){
+  const list = (cfg && cfg.objectifs || []).filter(o=>o && o.txt);
+  if(!list.length) return `<p class="muted">Aucun objectif fixé pour le moment.</p>`;
+  return CATS.map(cat=>{
+    const l = list.filter(o=>(o.cat||"Général")===cat);
+    return l.length ? `<div class="q-objcat">${escH(cat)}</div>${l.map(o=>`<div class="q-obj">• ${escH(o.txt)}</div>`).join("")}` : "";
+  }).join("") + (cfg.majLe ? `<p class="muted" style="margin-top:8px">Mis à jour le ${fmtStamp(cfg.majLe)}</p>` : "");
+}
+function dayDetailHtml(d, iso){
+  if(!d) return `<p class="muted">${iso < todayIso() ? "Journée non remplie → 0 sur chaque item." : "Pas encore rempli."}</p>`;
+  return ITEMS.map(it=>{
+    const v = (d.items||{})[it.k] || {};
+    const val = v.ras ? "R.A.S" : v.n ? v.n+"/5" : "non noté (0)";
+    return `<div class="q-dd"><b>${it.ic} ${it.l} · ${val}</b>${v.txt?`<p>${escH(v.txt)}</p>`:""}</div>`;
+  }).join("") + (d.journee ? `<div class="q-dd"><b>📝 Bilan de la journée</b><p>${escH(d.journee)}</p></div>` : "");
+}
+function chatHtml(title, back){
+  return `${back?`<span class="q-back" onclick="${back}">← Conversations</span>`:""}
+  <div class="card"><h2>${title}</h2>
+    <div class="q-chat"><div class="q-msgs" id="qMsgs"><p class="muted">Chargement…</p></div>
+    <div class="q-chatin"><textarea id="qChatTxt" placeholder="Message…"></textarea><button class="btn btn-gold" onclick="qSend()">➤</button></div></div>
+  </div>`;
+}
+let qChatTarget = null;
+function openChatStream(email){
+  qChatTarget = email;
+  const ref = db.collection("chatsJoueurs").doc(email);
+  const me = (auth.currentUser.email||"").toLowerCase();
+  const isCoach = me === ADMIN_EMAIL;
+  return ref.collection("messages").orderBy("ts").limitToLast(200).onSnapshot(s=>{
+    const box = document.getElementById("qMsgs"); if(!box) return;
+    box.innerHTML = s.docs.length ? s.docs.map(x=>{const m=x.data(); return `<div class="q-msg ${m.from===me?'me':'them'}">${escH(m.text)}<small>${fmtStamp(m.ts)}</small></div>`;}).join("") : `<p class="muted">Aucun message. Lance la conversation.</p>`;
+    box.scrollTop = box.scrollHeight;
+    ref.set(isCoach?{seenCoach:TSV()}:{seenJoueur:TSV()},{merge:true}).catch(()=>{});
+  }, e=>{ const b=document.getElementById("qMsgs"); if(b) b.innerHTML=`<p class="q-red">Erreur : ${e.code}</p>`; });
+}
+async function qSend(){
+  const ta = document.getElementById("qChatTxt"), t = ta.value.trim(); if(!t || !qChatTarget) return;
+  ta.value = "";
+  const me = (auth.currentUser.email||"").toLowerCase(), isCoach = me===ADMIN_EMAIL;
+  const ref = db.collection("chatsJoueurs").doc(qChatTarget);
+  try{
+    await ref.collection("messages").add({text:t, from:me, ts:TSV()});
+    await ref.set({lastText:t, lastFrom:me, lastTs:TSV(), ...(isCoach?{seenCoach:TSV()}:{seenJoueur:TSV()})},{merge:true});
+  }catch(e){ qToast("Envoi impossible : "+e.code); ta.value=t; }
+}
+function isUnread(meta, me){
+  if(!meta || !meta.lastTs || meta.lastFrom===me) return false;
+  const last = meta.lastTs.toMillis ? meta.lastTs.toMillis() : 0;
+  const seen = me===ADMIN_EMAIL ? (meta.seenCoach?.toMillis?.()||0) : (meta.seenJoueur?.toMillis?.()||0);
+  return last > seen;
+}
+
+// =================== CÔTÉ JOUEUR ===================
+function startPlayerExtras(email){
+  stopPlayerExtras();
+  Q.email = email; Q.weekOffset = 0; Q.draft = null;
+  Q.unsub.push(db.collection("quotidien").doc(email).collection("jours").onSnapshot(s=>{
+    Q.days = {}; s.docs.forEach(d=>Q.days[d.id]=d.data());
+    renderQuotidien();
+  }, e=>{ document.getElementById("quotidienContent").innerHTML = `<div class="banner lock">⚠️ Lecture impossible (${e.code}). Les règles Firestore du suivi quotidien ne sont peut-être pas publiées.</div>`; }));
+  Q.unsub.push(db.collection("suiviConfig").doc(email).onSnapshot(d=>{ Q.cfg = d.exists ? d.data() : {}; renderQuotidien(); }, ()=>{}));
+  Q.unsub.push(db.collection("chatsJoueurs").doc(email).onSnapshot(d=>{ Q.chatMeta = d.exists ? d.data() : {}; updatePlayerChatDot(); }, ()=>{}));
+  if(Q.chatUnsub) Q.chatUnsub();
+  document.getElementById("chatContent").innerHTML = chatHtml("💬 Chat avec ton coach");
+  Q.chatUnsub = null;
+  renderQuotidien();
+}
+function stopPlayerExtras(){ Q.unsub.forEach(f=>f()); Q.unsub=[]; if(Q.chatUnsub){Q.chatUnsub();Q.chatUnsub=null;} }
+function updatePlayerChatDot(){
+  const b = document.querySelector('.tab-btn[data-view="chat"]'); if(!b) return;
+  b.classList.toggle("q-dotted", isUnread(Q.chatMeta, Q.email));
+}
+// ouverture de l'onglet chat joueur : on écoute les messages
+document.addEventListener("click", e=>{
+  const b = e.target.closest && e.target.closest(".tab-btn"); if(!b || !Q.email) return;
+  if(b.dataset.view==="chat"){ if(!Q.chatUnsub){ document.getElementById("chatContent").innerHTML = chatHtml("💬 Chat avec ton coach"); Q.chatUnsub = openChatStream(Q.email); } }
+  else if(Q.chatUnsub){ Q.chatUnsub(); Q.chatUnsub = null; }
+});
+
+function getDraft(){
+  const t = todayIso();
+  if(!Q.draft || Q.draft.date !== t){
+    const ex = Q.days[t];
+    Q.draft = { date:t, items: JSON.parse(JSON.stringify((ex && ex.items) || {})), journee: (ex && ex.journee) || "" };
+    ITEMS.forEach(it=>{ if(!Q.draft.items[it.k]) Q.draft.items[it.k] = {n:null, ras:false, txt:""}; });
+  }
+  return Q.draft;
+}
+function qSetNote(k, n){
+  const d = getDraft(); d.items[k].n = n; d.items[k].ras = false; paintTodayItem(k);
+}
+function qSetRas(k){
+  const d = getDraft(); d.items[k].ras = !d.items[k].ras; if(d.items[k].ras) d.items[k].n = null; paintTodayItem(k);
+}
+function paintTodayItem(k){
+  const v = getDraft().items[k];
+  const box = document.getElementById("qi_"+k); if(!box) return;
+  box.querySelectorAll(".q-nb").forEach(b=>b.classList.toggle("on", +b.dataset.n <= (v.n||0) && !v.ras));
+  box.querySelector(".q-rasb").classList.toggle("on", !!v.ras);
+  box.querySelector(".q-val").textContent = v.ras ? "R.A.S" : v.n ? v.n+"/5" : "à noter";
+}
+async function qSaveDay(){
+  const d = getDraft();
+  ITEMS.forEach(it=>{ const ta=document.getElementById("qt_"+it.k); if(ta) d.items[it.k].txt = ta.value.trim(); });
+  const j = document.getElementById("qJournee"); if(j) d.journee = j.value.trim();
+  const manque = ITEMS.filter(it=>!d.items[it.k].n && !d.items[it.k].ras);
+  const btn = document.getElementById("qSaveBtn"); btn.disabled = true;
+  try{
+    await db.collection("quotidien").doc(Q.email).collection("jours").doc(d.date).set({ date:d.date, items:d.items, journee:d.journee, majLe:TSV() }, {merge:true});
+    qToast(manque.length ? `Enregistré · ⚠️ ${manque.map(m=>m.l).join(", ")} non noté = 0 à minuit` : "Journée validée ✓");
+  }catch(e){ qToast("Erreur : "+e.code); }
+  btn.disabled = false;
+}
+function qWeek(delta){ Q.weekOffset = Math.min(0, Q.weekOffset + delta); renderQuotidien(); }
+function qShowDay(iso){
+  const el = document.getElementById("qDayDetail"); if(!el) return;
+  el.innerHTML = `<div class="card"><h2>${frDate(iso)}</h2>${dayDetailHtml(Q.days[iso], iso)}</div>`;
+  el.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+function renderQuotidien(){
+  const el = document.getElementById("quotidienContent"); if(!el || !Q.email) return;
+  // ne pas écraser une saisie en cours si l'utilisateur tape
+  if(el.contains(document.activeElement) && document.activeElement.tagName==="TEXTAREA") return;
+  const t = todayIso(), d = getDraft(), monday = mondayOf(t, Q.weekOffset);
+  const ws = weekScore(Q.days, monday, Q.cfg);
+  const deja = !!Q.days[t];
+  el.innerHTML = `
+  <div class="card"><h2>🎯 Mes objectifs (fixés par mon coach)</h2>${objectifsHtml(Q.cfg)}</div>
+
+  <div class="card">
+    <h2>📅 Aujourd'hui · ${frDate(t)}</h2>
+    <p class="muted" style="margin-bottom:6px">Note chaque item de 1 à 5, ou <b>R.A.S</b> s'il n'y a rien à signaler. Un item ou une journée non remplis comptent <b class="q-red">0</b>. Tu peux modifier jusqu'à minuit.</p>
+    ${ITEMS.map(it=>{ const v=d.items[it.k]; return `
+    <div class="q-item" id="qi_${it.k}">
+      <div class="q-ihead"><b>${it.ic} ${it.l}</b><span class="q-val">${v.ras?"R.A.S":v.n?v.n+"/5":"à noter"}</span></div>
+      <div class="q-notes">${[1,2,3,4,5].map(n=>`<button type="button" class="q-nb ${!v.ras&&(v.n||0)>=n?'on':''}" data-n="${n}" onclick="qSetNote('${it.k}',${n})">${n}</button>`).join("")}
+        <button type="button" class="q-rasb ${v.ras?'on':''}" onclick="qSetRas('${it.k}')">R.A.S</button></div>
+      <textarea id="qt_${it.k}" placeholder="Ce que j'ai fait aujourd'hui (${it.l.toLowerCase()})…">${escH(v.txt)}</textarea>
+    </div>`;}).join("")}
+    <label>Bilan de la journée (facultatif)</label>
+    <textarea id="qJournee" placeholder="Ressenti, difficulté, victoire du jour…">${escH(d.journee)}</textarea>
+    <button class="btn btn-gold btn-block" id="qSaveBtn" onclick="qSaveDay()">${deja?"Mettre à jour ma journée":"Valider ma journée"}</button>
+  </div>
+
+  <div class="card">
+    <div class="q-wnav"><button class="btn btn-sm" onclick="qWeek(-1)">‹</button>
+      <h2 style="border:none;margin:0;padding:0">Semaine du ${frDate(monday,{day:"numeric",month:"short"})}</h2>
+      <button class="btn btn-sm" onclick="qWeek(1)" ${Q.weekOffset===0?"disabled":""}>›</button></div>
+    ${weekSummaryHtml(ws)}
+    ${weekGridHtml(Q.days, Q.cfg, monday, "qShowDay")}
+    <p class="muted">Touche une case pour voir le détail du jour. <span class="q-red">0</span> = non rempli · RAS = rien à signaler · … = en cours</p>
+  </div>
+  <div id="qDayDetail"></div>`;
+}
+window.qSetNote=qSetNote; window.qSetRas=qSetRas; window.qSaveDay=qSaveDay; window.qWeek=qWeek; window.qShowDay=qShowDay; window.qSend=qSend;
+
+// =================== ESPACE COACH ===================
+function startCoach(){
+  stopCoach();
+  document.getElementById("appRoot").style.display = "none";
+  document.getElementById("coachRoot").style.display = "block";
+  C.unsub.push(db.collection("whitelist").onSnapshot(s=>{
+    C.players = s.docs.map(d=>({email:d.id, nom:(d.data().nom||"")})).sort((a,b)=>(a.nom||a.email).localeCompare(b.nom||b.email));
+    // abonnements par joueur (jours + config)
+    C.subUnsub.forEach(f=>f()); C.subUnsub=[];
+    C.players.forEach(p=>{
+      C.subUnsub.push(db.collection("quotidien").doc(p.email).collection("jours").onSnapshot(q=>{ C.data[p.email]={}; q.docs.forEach(d=>C.data[p.email][d.id]=d.data()); renderCoach(); }, ()=>{}));
+      C.subUnsub.push(db.collection("suiviConfig").doc(p.email).onSnapshot(d=>{ C.cfgs[p.email]= d.exists?d.data():{}; renderCoach(); }, ()=>{}));
+    });
+    renderCoach();
+  }, e=>{ document.getElementById("coachMain").innerHTML = `<div class="banner lock">⚠️ ${e.code}</div>`; }));
+  C.unsub.push(db.collection("chatsJoueurs").onSnapshot(s=>{ C.meta={}; s.docs.forEach(d=>C.meta[d.id]=d.data()); renderCoachTabs(); if(C.tab==="chat" && !C.chatWith) renderCoach(); }, ()=>{}));
+  coachGo("joueurs");
+}
+function stopCoach(){ C.unsub.forEach(f=>f()); C.subUnsub.forEach(f=>f()); C.unsub=[]; C.subUnsub=[]; if(C.chatUnsub){C.chatUnsub();C.chatUnsub=null;} const r=document.getElementById("coachRoot"); if(r) r.style.display="none"; }
+function coachGo(tab){
+  C.tab = tab; if(C.chatUnsub){C.chatUnsub();C.chatUnsub=null;}
+  if(tab!=="chat") C.chatWith=null;
+  if(tab==="joueurs") C.sel=null;
+  renderCoach(); renderCoachTabs(); window.scrollTo(0,0);
+}
+function renderCoachTabs(){
+  const dot = Object.keys(C.meta).some(k=>isUnread(C.meta[k], ADMIN_EMAIL));
+  document.getElementById("coachTabs").innerHTML = [["joueurs","👥","Joueurs"],["chat","💬","Chat"]].map(([k,ic,l])=>
+    `<button class="${C.tab===k?'active':''} ${k==='chat'&&dot?'q-dotted':''}" onclick="coachGo('${k}')"><span class="ic">${ic}</span>${l}</button>`).join("");
+}
+function coachOpen(email){ C.sel=email; C.tab="joueurs"; C.weekOffset=0; C.openDay=null; renderCoach(); renderCoachTabs(); window.scrollTo(0,0);
+  if(!C.idents[email]) db.collection("joueurs").doc(email).get().then(d=>{ C.idents[email]= d.exists ? (d.data().identite||{}) : {}; renderCoach(); }).catch(()=>{ C.idents[email]={}; });
+}
+function coachWeek(delta){ C.weekOffset = Math.min(0, C.weekOffset+delta); C.openDay=null; renderCoach(); }
+function coachDay(iso){ C.openDay = C.openDay===iso ? null : iso; renderCoach(); }
+function playerLabel(p){ return escH(p.nom || p.email); }
+function renderCoach(){
+  const main = document.getElementById("coachMain"); if(!main) return;
+  if(main.contains(document.activeElement) && ["TEXTAREA","INPUT"].includes(document.activeElement.tagName)) return;
+  const t = todayIso();
+  if(C.tab==="chat"){
+    if(!C.chatWith){
+      main.innerHTML = `<div class="card"><h2>Messagerie joueurs</h2>${C.players.map(p=>{ const m=C.meta[p.email]||{};
+        return `<div class="q-prow" onclick="coachChat('${escH(p.email)}')"><div><b>${playerLabel(p)}</b><div class="muted">${m.lastText?escH(m.lastText.slice(0,60)):"Aucun message"}</div></div>${isUnread(m,ADMIN_EMAIL)?'<span class="q-badge bad">Nouveau</span>':''}</div>`;}).join("") || '<p class="muted">Aucun joueur.</p>'}</div>`;
+    }
+    return;
+  }
+  if(!C.sel){
+    const monday = mondayOf(t,0);
+    main.innerHTML = `<div class="card"><h2>Mes joueurs · aujourd'hui ${frDate(t,{day:"numeric",month:"short"})}</h2>
+    ${C.players.map(p=>{
+      const days = C.data[p.email]||{}, cfg = C.cfgs[p.email]||{}, ws = weekScore(days, monday, cfg);
+      const td = days[t], ok = td && ITEMS.every(it=>td.items && td.items[it.k] && (td.items[it.k].n || td.items[it.k].ras));
+      const badge = ok ? '<span class="q-badge good">Rempli</span>' : td ? '<span class="q-badge mid">Partiel</span>' : '<span class="q-badge bad">Pas rempli</span>';
+      return `<div class="q-prow" onclick="coachOpen('${escH(p.email)}')"><div><b>${playerLabel(p)}</b>
+        <div class="muted">Semaine : <b class="${noteClass(ws.note)}">${fmtNote(ws.note)}/5</b>${ws.manques?` · <span class="q-red">${ws.manques} pénalité(s)</span>`:""}</div></div>${badge}</div>`;
+    }).join("") || '<p class="muted">Aucun joueur dans la liste blanche. Ajoute-les via gestion-acces.html.</p>'}</div>`;
+    return;
+  }
+  const p = C.players.find(x=>x.email===C.sel) || {email:C.sel};
+  const days = C.data[C.sel]||{}, cfg = C.cfgs[C.sel]||{}, monday = mondayOf(t, C.weekOffset), ws = weekScore(days, monday, cfg);
+  const id = C.idents[C.sel]||{};
+  const objs = (cfg.objectifs||[]);
+  main.innerHTML = `
+  <span class="q-back" onclick="coachGo('joueurs')">← Tous les joueurs</span>
+  <div class="card"><h2>${playerLabel(p)}</h2>
+    <p class="muted">${escH([id.prenom&&(id.prenom+" "+(id.nom||"")), id.poste, id.club].filter(Boolean).join(" · ") || p.email)}</p>
+    <button class="btn btn-outline btn-block" onclick="coachChat('${escH(C.sel)}')">💬 Ouvrir le chat${isUnread(C.meta[C.sel],ADMIN_EMAIL)?" (nouveau)":""}</button>
+  </div>
+  <div class="card">
+    <div class="q-wnav"><button class="btn btn-sm" onclick="coachWeek(-1)">‹</button>
+      <h2 style="border:none;margin:0;padding:0">Semaine du ${frDate(monday,{day:"numeric",month:"short"})}</h2>
+      <button class="btn btn-sm" onclick="coachWeek(1)" ${C.weekOffset===0?"disabled":""}>›</button></div>
+    ${weekSummaryHtml(ws)}
+    ${weekGridHtml(days, cfg, monday, "coachDay")}
+    ${C.openDay ? `<div class="q-daybox"><b>${frDate(C.openDay)}</b>${dayDetailHtml(days[C.openDay], C.openDay)}</div>` : `<p class="muted">Touche une case pour lire ce que le joueur a écrit.</p>`}
+  </div>
+  <div class="card"><h2>🎯 Objectifs du joueur</h2>
+    <div id="cObjList">${objs.length ? objs.map((o,i)=>`<div class="q-objrow"><span class="q-tag">${escH(o.cat||"Général")}</span><span style="flex:1">${escH(o.txt)}</span><button class="obj-rm" onclick="coachDelObj(${i})">✕</button></div>`).join("") : '<p class="muted">Aucun objectif.</p>'}</div>
+    <label>Nouvel objectif</label>
+    <div class="row"><select id="cObjCat" style="flex:0 0 38%">${CATS.map(c=>`<option>${c}</option>`).join("")}</select><input type="text" id="cObjTxt" placeholder="Ex : 10 min de visualisation avant chaque séance"></div>
+    <button class="btn btn-gold btn-block" onclick="coachAddObj()">Ajouter l'objectif</button>
+    <p class="muted" style="margin-top:8px">Le joueur le voit immédiatement en haut de son suivi quotidien.</p>
+  </div>
+  <div class="card"><h2>⚙️ Début du suivi quotidien</h2>
+    <p class="muted">Les jours non remplis à partir de cette date sont pénalisés (0). Par défaut : son premier jour rempli.</p>
+    <div class="row"><input type="date" id="cDebut" value="${escH(cfg.debut||"")}"><button class="btn btn-outline" style="flex:0 0 auto" onclick="coachSetDebut()">Enregistrer</button></div>
+  </div>`;
+}
+async function coachSaveObjs(list){
+  try{ await db.collection("suiviConfig").doc(C.sel).set({objectifs:list, majLe:TSV()},{merge:true}); }
+  catch(e){ qToast("Erreur : "+e.code); }
+}
+function coachAddObj(){
+  const txt = document.getElementById("cObjTxt").value.trim(), cat = document.getElementById("cObjCat").value;
+  if(!txt) return qToast("Écris l'objectif");
+  document.getElementById("cObjTxt").value = ""; document.getElementById("cObjTxt").blur();
+  const list = ((C.cfgs[C.sel]||{}).objectifs||[]).concat([{txt, cat, cree:new Date().toISOString()}]);
+  coachSaveObjs(list).then(()=>qToast("Objectif envoyé au joueur ✓"));
+}
+function coachDelObj(i){
+  if(!confirm("Supprimer cet objectif ?")) return;
+  const list = ((C.cfgs[C.sel]||{}).objectifs||[]).slice(); list.splice(i,1); coachSaveObjs(list);
+}
+async function coachSetDebut(){
+  const v = document.getElementById("cDebut").value; document.getElementById("cDebut").blur();
+  try{ await db.collection("suiviConfig").doc(C.sel).set({debut:v||null},{merge:true}); qToast("Date enregistrée ✓"); }catch(e){ qToast("Erreur : "+e.code); }
+}
+function coachChat(email){
+  C.tab="chat"; C.chatWith=email; renderCoachTabs();
+  const p = C.players.find(x=>x.email===email) || {email};
+  document.getElementById("coachMain").innerHTML = chatHtml("💬 "+playerLabel(p), "coachGo('chat')");
+  if(C.chatUnsub) C.chatUnsub();
+  C.chatUnsub = openChatStream(email);
+  window.scrollTo(0,0);
+}
+window.coachGo=coachGo; window.coachOpen=coachOpen; window.coachWeek=coachWeek; window.coachDay=coachDay; window.coachAddObj=coachAddObj; window.coachDelObj=coachDelObj; window.coachSetDebut=coachSetDebut; window.coachChat=coachChat;
+document.getElementById("coachSignOut").addEventListener("click", ()=>{ stopCoach(); auth.signOut(); });
+// rafraîchit l'affichage à minuit (passage au jour suivant → pénalités)
+setInterval(()=>{ const t=todayIso(); if(window._qLastDay && window._qLastDay!==t){ Q.draft=null; renderQuotidien(); renderCoach(); } window._qLastDay=t; }, 60000);
 
 // ---------- RENDER ALL ----------
 function render(){
