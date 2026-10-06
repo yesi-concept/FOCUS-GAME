@@ -64,6 +64,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .educ-row .n{font-weight:700}.educ-row .e{font-size:12px;color:var(--muted)}
 .badge{font-size:11px;border-radius:20px;padding:3px 8px;white-space:nowrap}
 .badge.ok{background:rgba(95,178,122,.15);color:var(--ok)}
+.badge.warn{background:rgba(217,138,58,.15);color:var(--warn)}
 .badge.miss{background:rgba(201,87,74,.15);color:var(--bad)}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .stat{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 6px;text-align:center}
@@ -126,7 +127,12 @@ function showFatal(msg){
   else if(typeof firebase==="undefined") hint="<br><br>⚠️ Firebase n'a pas pu se charger (réseau ou bloqueur de pub). Recharge la page.";
   el.innerHTML="Erreur technique : "+String(msg).replace(/[<>&]/g,"")+hint;
 }
-if(typeof firebase==="undefined"){ showFatal("Firebase non chargé"); throw new Error("stop"); }
+const FB_OK = typeof firebase!=="undefined";
+if(!FB_OK){ // pas de Firebase (aperçu, hors ligne, bloqueur) : on affiche le message au lieu de planter
+  window.firebase={initializeApp(){},auth:Object.assign(()=>({onAuthStateChanged(){},getRedirectResult(){return Promise.resolve()},signOut(){},signInWithPopup(){return Promise.reject({message:"Firebase non chargé"})}}),{GoogleAuthProvider:function(){this.setCustomParameters=()=>{}}}),firestore:Object.assign(()=>({}),{FieldValue:{serverTimestamp:()=>null}})};
+  document.addEventListener("DOMContentLoaded",()=>showFatal("Firebase non chargé"));
+  setTimeout(()=>showFatal("Firebase non chargé"),0);
+}
 if(!/^https?:$/.test(location.protocol)){ showFatal("Environnement non supporté"); }
 firebase.initializeApp({
   apiKey: "AIzaSyA1NE8TIoR3NafqF39SSOZ3nlJGpXgJ95A",
@@ -166,6 +172,7 @@ function weekendLabel(k){ const a=new Date(k+"T12:00:00"); a.setDate(a.getDate()
 
 /* ===== AUTH ===== */
 $("btnLogin").onclick = async () => {
+  if(!FB_OK) return showFatal("Firebase non chargé");
   $("loginErr").textContent="";
   const p = new firebase.auth.GoogleAuthProvider(); p.setCustomParameters({prompt:"select_account"});
   try { await auth.signInWithPopup(p); }
@@ -235,7 +242,7 @@ function vForm(editId){
   <div class="card">
     <h2>${ex?"Modifier le rapport":"Rapport de match"}</h2>
     <div class="row">
-      <div><label>Date</label><input type="date" id="fDate" value="${v("date",isoLocal(sat))}"></div>
+      <div><label>Date du match ⚠️</label><input type="date" id="fDate" value="${v("date",isoLocal(sat))}"></div>
       <div><label>Lieu</label><select id="fLieu"><option ${v("lieu")==="Domicile"?"selected":""}>Domicile</option><option ${v("lieu")==="Extérieur"?"selected":""}>Extérieur</option></select></div>
     </div>
     <label>Adversaire</label><input id="fAdv" placeholder="Nom du club adverse" value="${v("adversaire")}">
@@ -274,6 +281,8 @@ async function saveMatch(){
   if(!d.date||!d.adversaire) return toast("Date et adversaire obligatoires");
   const miss = NOTES.filter(n=>!d.notes[n.k]); if(miss.length) return toast("Note manquante : "+miss[0].l);
   if(!d.titulaires) return toast("Composition obligatoire");
+  const ecart = Math.abs((new Date(d.date+"T12:00:00") - new Date())/864e5);
+  if(ecart>6 && !confirm("Attention : la date du match est le "+fmtDate(d.date)+".\nC'est bien la bonne date ?")) return;
   $("btnSave").disabled=true;
   try{
     if(F.id){ await db.collection("matchs").doc(F.id).update({...d, modifieLe:TS()}); toast("Rapport modifié ✓"); }
@@ -328,9 +337,12 @@ function vDash(){
   const rows = S.educs.map(e=>{
     const mine=S.matchs.filter(m=>m.educEmail===e.email);
     const done=mine.some(m=>weekendKey(m.date)===wk);
+    const recent=!done && mine.some(m=>m.creeLe&&m.creeLe.toMillis&&m.creeLe.toMillis()>Date.now()-8*864e5);
+    const last=mine[0]; // trié du plus récent au plus ancien
+    const badge = done?'<span class="badge ok">Rapport reçu</span>' : recent?'<span class="badge warn">Date à vérifier</span>' : '<span class="badge miss">En attente</span>';
     return `<div class="educ-row" onclick="S.filterEduc='${esc(e.email)}';go('matchs')">
-      <div><div class="n">${esc(e.equipe||"—")} · ${esc(e.nom||"")}</div><div class="e">${mine.length} match(s) · moy. globale ${avg(mine,"globale")}/5</div></div>
-      <span class="badge ${done?"ok":"miss"}">${done?"Rapport reçu":"En attente"}</span></div>`;
+      <div><div class="n">${esc(e.equipe||"—")} · ${esc(e.nom||"")}</div><div class="e">${mine.length} match(s) · moy. globale ${avg(mine,"globale")}/5${last?` · dernier match daté du <b>${fmtDate(last.date)}</b>`:""}</div></div>
+      ${badge}</div>`;
   }).join("");
   const recus=S.educs.filter(e=>S.matchs.some(m=>m.educEmail===e.email&&weekendKey(m.date)===wk)).length;
   $("main").innerHTML = `
