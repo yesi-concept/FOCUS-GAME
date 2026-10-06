@@ -89,6 +89,20 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
 .muted{color:var(--muted);font-size:13px}
 .backlink{color:var(--gold);font-size:14px;cursor:pointer;margin-bottom:12px;display:inline-block}
 .filter{display:flex;gap:8px;margin-bottom:12px}
+.stbl-wrap{overflow-x:auto;margin:0 -4px}
+.stbl{width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap}
+.stbl th{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;padding:8px 6px;border-bottom:1px solid var(--line);text-align:center}
+.stbl td{padding:10px 6px;border-bottom:1px solid var(--line);text-align:center}
+.stbl th:first-child,.stbl td:first-child{text-align:left;position:sticky;left:0;background:var(--card);z-index:1}
+.stbl tr.clk{cursor:pointer}
+.stbl tr.tot td{font-weight:800;color:var(--gold);border-top:2px solid var(--gold);border-bottom:none}
+.stbl .eq{font-weight:700}.stbl .ed{display:block;font-size:11px;color:var(--muted);font-weight:400}
+.pos{color:var(--ok);font-weight:700}.neg{color:var(--bad);font-weight:700}
+.forme{display:inline-flex;gap:3px}.forme i{font-style:normal;width:18px;height:18px;border-radius:4px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;color:#111}
+.forme i.V{background:var(--ok)}.forme i.N{background:var(--warn)}.forme i.D{background:var(--bad)}
+.legend{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6}
+.alert-row{display:block;padding:9px 10px;border-radius:10px;background:var(--card2);border:1px solid var(--line);margin-bottom:6px;font-size:13px}
+
 </style>
 </head>
 <body>
@@ -220,14 +234,14 @@ function unread(email){
 /* ===== NAV ===== */
 function renderTabs(){
   const t = S.isAdmin
-    ? [["dash","📊","Tableau"],["matchs","⚽","Matchs"],["chat","💬","Chat"],["acces","🔑","Accès"]]
+    ? [["dash","📊","Tableau"],["stats","📈","Stats"],["matchs","⚽","Matchs"],["chat","💬","Chat"],["acces","🔑","Accès"]]
     : [["form","✏️","Rapport"],["hist","📋","Historique"],["chat","💬","Chat"]];
   const chatDot = S.isAdmin ? Object.keys(S.chatMeta).some(unread) : unread(S.email);
   $("tabs").innerHTML = t.map(([k,ic,l])=>`<button class="${S.tab===k?"on":""}" onclick="go('${k}')"><span class="ic">${ic}</span>${l}${k==="chat"&&chatDot?'<i class="dot"></i>':""}</button>`).join("");
 }
 function go(t){ S.tab=t; if(S.chatUnsub){S.chatUnsub();S.chatUnsub=null;} if(t!=="chat") S.chatWith=null; if(t==="chat"&&!S.isAdmin) S.chatWith=S.email; render(); renderTabs(); window.scrollTo(0,0); }
 function render(){
-  const v = {form:vForm, hist:vHist, dash:vDash, matchs:vMatchs, chat:vChat, acces:vAcces}[S.tab];
+  const v = {form:vForm, hist:vHist, dash:vDash, stats:vStats, matchs:vMatchs, chat:vChat, acces:vAcces}[S.tab];
   if(v) v();
 }
 
@@ -363,6 +377,50 @@ function vMatchs(){
   </select></div>
   ${e?`<div class="card"><h2>${esc(e.equipe)} · ${esc(e.nom)}</h2>${statsBlock(M)}<div style="margin-top:12px"><button class="btn ghost" onclick="openChat('${esc(e.email)}')">💬 Ouvrir le chat</button></div></div>`:""}
   <div class="card">${M.length?M.map(m=>matchCard(m,true)).join(""):'<p class="muted">Aucun rapport.</p>'}</div>`;
+}
+
+/* ===== ADMIN : STATS PAR CATÉGORIE ===== */
+S.stComp = S.stComp || "Tout"; S.stPer = S.stPer || "saison";
+function statsRow(M){
+  const r={mj:M.length,v:0,n:0,d:0,bp:0,bc:0,cs:0};
+  M.forEach(m=>{ const a=+m.scoreNous||0,b=+m.scoreEux||0; r.bp+=a; r.bc+=b; if(a>b)r.v++; else if(a<b)r.d++; else r.n++; if(b===0)r.cs++; });
+  r.diff=r.bp-r.bc; r.pts=r.v*3+r.n;
+  r.mbp=r.mj?(r.bp/r.mj).toFixed(1):"–"; r.mbc=r.mj?(r.bc/r.mj).toFixed(1):"–";
+  r.forme=M.slice().sort((x,y)=>(y.date||"").localeCompare(x.date||"")).slice(0,5).reverse().map(resultat);
+  return r;
+}
+function vStats(){
+  const since = S.stPer==="30j" ? isoLocal(new Date(Date.now()-30*864e5)) : S.stPer==="7j" ? isoLocal(new Date(Date.now()-7*864e5)) : "";
+  const keep = m => (S.stComp==="Tout"||m.competition===S.stComp) && (!since||(m.date||"")>=since);
+  const all = S.matchs.filter(keep);
+  const rows = S.educs.map(e=>({e, r:statsRow(all.filter(m=>m.educEmail===e.email))}));
+  const tot = statsRow(all);
+  const sgn = n => n>0?`<span class="pos">+${n}</span>`:n<0?`<span class="neg">${n}</span>`:"0";
+  const fm = f => f.length?`<span class="forme">${f.map(x=>`<i class="${x}">${x}</i>`).join("")}</span>`:"–";
+  // points d'attention automatiques
+  const alerts=[];
+  rows.forEach(({e,r})=>{
+    if(r.mj>=2 && r.bc/r.mj>=3) alerts.push(`🔴 <b>${esc(e.equipe)}</b> encaisse ${r.mbc} buts/match en moyenne`);
+    if(r.mj>=2 && r.bp/r.mj<1) alerts.push(`🟠 <b>${esc(e.equipe)}</b> marque moins d'1 but/match (${r.mbp})`);
+    const f=r.forme.slice(-3); if(f.length===3 && f.every(x=>x==="D")) alerts.push(`🔴 <b>${esc(e.equipe)}</b> : 3 défaites de suite`);
+    if(f.length===3 && f.every(x=>x==="V")) alerts.push(`🟢 <b>${esc(e.equipe)}</b> : 3 victoires de suite`);
+  });
+  $("main").innerHTML = `
+  <div class="filter">
+    <select onchange="S.stPer=this.value;render()">${[["saison","Toute la saison"],["30j","30 derniers jours"],["7j","7 derniers jours"]].map(([k,l])=>`<option value="${k}" ${S.stPer===k?"selected":""}>${l}</option>`).join("")}</select>
+    <select onchange="S.stComp=this.value;render()">${["Tout","Championnat","Coupe","Amical","Tournoi"].map(c=>`<option ${S.stComp===c?"selected":""}>${c}</option>`).join("")}</select>
+  </div>
+  <div class="card"><h2>Buts par catégorie</h2>
+    <div class="stbl-wrap"><table class="stbl">
+      <tr><th>Équipe</th><th>MJ</th><th>V</th><th>N</th><th>D</th><th>BP</th><th>BC</th><th>Diff</th><th>BP/m</th><th>BC/m</th><th>Forme</th></tr>
+      ${rows.map(({e,r})=>`<tr class="clk" onclick="S.filterEduc='${esc(e.email)}';go('matchs')">
+        <td><span class="eq">${esc(e.equipe)}</span><span class="ed">${esc(e.nom)}</span></td>
+        <td>${r.mj}</td><td>${r.v}</td><td>${r.n}</td><td>${r.d}</td><td><b>${r.bp}</b></td><td><b>${r.bc}</b></td><td>${sgn(r.diff)}</td><td>${r.mbp}</td><td>${r.mbc}</td><td>${fm(r.forme)}</td></tr>`).join("")}
+      <tr class="tot"><td>CLUB</td><td>${tot.mj}</td><td>${tot.v}</td><td>${tot.n}</td><td>${tot.d}</td><td>${tot.bp}</td><td>${tot.bc}</td><td>${sgn(tot.diff)}</td><td>${tot.mbp}</td><td>${tot.mbc}</td><td></td></tr>
+    </table></div>
+    <div class="legend">MJ matchs joués · BP buts pour · BC buts contre · BP/m et BC/m moyenne par match · Forme = 5 derniers matchs (le plus récent à droite).<br>Touche une équipe pour voir ses matchs et écrire à l'éducateur.</div>
+  </div>
+  ${alerts.length?`<div class="card"><h2>Points d'attention</h2>${alerts.map(a=>`<div class="alert-row">${a}</div>`).join("")}</div>`:""}`;
 }
 
 /* ===== CHAT ===== */
