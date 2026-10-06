@@ -184,6 +184,18 @@ function currentWeekendKey(){ const d=new Date(); d.setHours(12,0,0,0); const da
 function weekendLabel(k){ const a=new Date(k+"T12:00:00"); a.setDate(a.getDate()+5); const b=new Date(a); b.setDate(b.getDate()+1); return a.getDate()+"-"+b.toLocaleDateString("fr-FR",{day:"numeric",month:"short"}); }
 // Lundi/mardi → on regarde encore le week-end qui vient de passer
 
+/* ===== CATÉGORIES MULTIPLES ===== */
+function teamsOf(str){ return String(str||"").split(/[,;\/+]|\s+et\s+/i).map(x=>x.trim()).filter(Boolean); }
+// un match appartient à la ligne (éducateur + catégorie)
+function belongs(m,e){
+  if(m.educEmail!==e.email) return false;
+  if(!e.multi) return true;
+  if(m.equipe===e.equipe) return true;
+  return !e.teams.includes(m.equipe) && e.first; // ancien rapport sans catégorie précise → 1re équipe
+}
+function entryByKey(k){ return S.educs.find(x=>x.key===k); }
+function filteredMatchs(){ const e=entryByKey(S.filterEduc); return e ? S.matchs.filter(m=>belongs(m,e)) : S.matchs; }
+
 /* ===== AUTH ===== */
 $("btnLogin").onclick = async () => {
   if(!FB_OK) return showFatal("Firebase non chargé");
@@ -207,7 +219,7 @@ auth.onAuthStateChanged(async u => {
     }catch(e){ await auth.signOut(); $("loginErr").textContent="Accès refusé ("+e.code+")."; return; }
   }
   $("vLogin").classList.add("hidden"); $("vApp").classList.remove("hidden");
-  $("whoami").textContent = S.isAdmin ? "Coordinateur · "+S.email : (S.profil.nom||"")+" · "+(S.profil.equipe||"");
+  $("whoami").textContent = S.isAdmin ? "Coordinateur · "+S.email : (S.profil.nom||"")+" · "+teamsOf(S.profil.equipe).join(" / ");
   startListeners();
   go(S.isAdmin ? "dash" : "form");
 });
@@ -215,7 +227,12 @@ auth.onAuthStateChanged(async u => {
 /* ===== LISTENERS ===== */
 function startListeners(){
   if(S.isAdmin){
-    S.unsub.push(db.collection("educateurs").onSnapshot(s=>{ S.educs=s.docs.map(d=>({email:d.id,...d.data()})).sort((a,b)=>(a.equipe||"").localeCompare(b.equipe||"")); refresh(); }));
+    S.unsub.push(db.collection("educateurs").onSnapshot(s=>{
+      S.educDocs=s.docs.map(d=>({email:d.id,...d.data()})).sort((a,b)=>(a.equipe||"").localeCompare(b.equipe||""));
+      // une ligne par catégorie : un même éducateur peut gérer plusieurs équipes
+      S.educs=[]; S.educDocs.forEach(d=>{ const t=teamsOf(d.equipe); (t.length?t:["—"]).forEach((eq,i)=>S.educs.push({...d, equipe:eq, teams:t, multi:t.length>1, first:i===0, key:d.email+"|"+eq})); });
+      S.educs.sort((a,b)=>a.equipe.localeCompare(b.equipe,undefined,{numeric:true}));
+      refresh(); }));
     S.unsub.push(db.collection("matchs").onSnapshot(s=>{ S.matchs=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.date||"").localeCompare(a.date||"")); refresh(); }, e=>toast("Erreur lecture : "+e.code)));
     S.unsub.push(db.collection("chats").onSnapshot(s=>{ S.chatMeta={}; s.docs.forEach(d=>S.chatMeta[d.id]=d.data()); renderTabs(); if(S.tab==="chat"&&!S.chatWith) render(); }));
   } else {
@@ -255,6 +272,9 @@ function vForm(editId){
   $("main").innerHTML = `
   <div class="card">
     <h2>${ex?"Modifier le rapport":"Rapport de match"}</h2>
+    ${(()=>{ const T=teamsOf(S.profil&&S.profil.equipe); if(T.length<2) return "";
+      const cur = ex ? ex.equipe : (S.lastTeam||"");
+      return `<label>Catégorie concernée</label><select id="fTeam"><option value="">— Choisir la catégorie —</option>${T.map(t=>`<option ${t===cur?"selected":""}>${esc(t)}</option>`).join("")}</select>`; })()}
     <div class="row">
       <div><label>Date du match ⚠️</label><input type="date" id="fDate" value="${v("date",isoLocal(sat))}"></div>
       <div><label>Lieu</label><select id="fLieu"><option ${v("lieu")==="Domicile"?"selected":""}>Domicile</option><option ${v("lieu")==="Extérieur"?"selected":""}>Extérieur</option></select></div>
@@ -287,11 +307,13 @@ function vForm(editId){
 function setNote(k,i){ F.notes[k]=i; $("st_"+k).querySelectorAll("button").forEach((b,j)=>b.classList.toggle("on",j<i)); $("lbl_"+k).textContent=i+"/5"; }
 async function saveMatch(){
   const d = {
+    equipe: $("fTeam") ? $("fTeam").value : (teamsOf(S.profil&&S.profil.equipe)[0]||""),
     date:$("fDate").value, lieu:$("fLieu").value, adversaire:$("fAdv").value.trim(), competition:$("fComp").value,
     scoreNous:+$("fS1").value||0, scoreEux:+$("fS2").value||0, buteurs:$("fBut").value.trim(),
     systeme:$("fSys").value, titulaires:$("fTit").value.trim(), remplacants:$("fRemp").value.trim(), absents:$("fAbs").value.trim(),
     notes:F.notes, commentaires:Object.fromEntries(NOTES.map(n=>[n.k,$("c_"+n.k).value.trim()])), bilan:$("fBilan").value.trim(),
   };
+  if($("fTeam") && !d.equipe) return toast("Choisis la catégorie du match");
   if(!d.date||!d.adversaire) return toast("Date et adversaire obligatoires");
   const miss = NOTES.filter(n=>!d.notes[n.k]); if(miss.length) return toast("Note manquante : "+miss[0].l);
   if(!d.titulaires) return toast("Composition obligatoire");
@@ -300,7 +322,7 @@ async function saveMatch(){
   $("btnSave").disabled=true;
   try{
     if(F.id){ await db.collection("matchs").doc(F.id).update({...d, modifieLe:TS()}); toast("Rapport modifié ✓"); }
-    else{ await db.collection("matchs").add({...d, educEmail:S.email, educNom:S.profil.nom||"", equipe:S.profil.equipe||"", creeLe:TS()}); toast("Rapport envoyé ✓"); }
+    else{ await db.collection("matchs").add({...d, educEmail:S.email, educNom:S.profil.nom||"", creeLe:TS()}); S.lastTeam=d.equipe; toast("Rapport envoyé ✓ · "+d.equipe); }
     go("hist");
   }catch(e){ toast("Erreur : "+e.code); $("btnSave").disabled=false; }
 }
@@ -310,7 +332,7 @@ function matchCard(m, showEduc){
   const r=resultat(m), open=S.openMatch===m.id, c=m.commentaires||{};
   return `<div class="match" onclick="toggleMatch('${m.id}')">
     <div class="match-top">
-      <div><div class="t">${showEduc?esc(m.equipe)+" · ":""}${m.lieu==="Extérieur"?"@ ":"vs "}${esc(m.adversaire)}</div>
+      <div><div class="t">${(showEduc||teamsOf(S.profil&&S.profil.equipe).length>1)?esc(m.equipe)+" · ":""}${m.lieu==="Extérieur"?"@ ":"vs "}${esc(m.adversaire)}</div>
       <div class="s">${fmtDate(m.date)} · ${esc(m.competition)}${showEduc?" · "+esc(m.educNom):""}</div></div>
       <div class="res ${r}">${m.scoreNous} – ${m.scoreEux}</div>
     </div>
@@ -349,16 +371,16 @@ function statsBlock(M){
 function vDash(){
   const wk=currentWeekendKey();
   const rows = S.educs.map(e=>{
-    const mine=S.matchs.filter(m=>m.educEmail===e.email);
+    const mine=S.matchs.filter(m=>belongs(m,e));
     const done=mine.some(m=>weekendKey(m.date)===wk);
     const recent=!done && mine.some(m=>m.creeLe&&m.creeLe.toMillis&&m.creeLe.toMillis()>Date.now()-8*864e5);
     const last=mine[0]; // trié du plus récent au plus ancien
     const badge = done?'<span class="badge ok">Rapport reçu</span>' : recent?'<span class="badge warn">Date à vérifier</span>' : '<span class="badge miss">En attente</span>';
-    return `<div class="educ-row" onclick="S.filterEduc='${esc(e.email)}';go('matchs')">
+    return `<div class="educ-row" onclick="S.filterEduc='${esc(e.key)}';go('matchs')">
       <div><div class="n">${esc(e.equipe||"—")} · ${esc(e.nom||"")}</div><div class="e">${mine.length} match(s) · moy. globale ${avg(mine,"globale")}/5${last?` · dernier match daté du <b>${fmtDate(last.date)}</b>`:""}</div></div>
       ${badge}</div>`;
   }).join("");
-  const recus=S.educs.filter(e=>S.matchs.some(m=>m.educEmail===e.email&&weekendKey(m.date)===wk)).length;
+  const recus=S.educs.filter(e=>S.matchs.some(m=>belongs(m,e)&&weekendKey(m.date)===wk)).length;
   $("main").innerHTML = `
   <div class="card"><h2>Week-end du ${weekendLabel(wk)}</h2>
     <p class="muted" style="margin-bottom:12px">${recus}/${S.educs.length} rapports reçus</p>
@@ -368,12 +390,12 @@ function vDash(){
 
 /* ===== ADMIN : MATCHS ===== */
 function vMatchs(){
-  const M = S.filterEduc ? S.matchs.filter(m=>m.educEmail===S.filterEduc) : S.matchs;
-  const e = S.educs.find(x=>x.email===S.filterEduc);
+  const M = filteredMatchs();
+  const e = entryByKey(S.filterEduc);
   $("main").innerHTML = `
   <div class="filter"><select onchange="S.filterEduc=this.value;render()">
     <option value="">Toutes les équipes</option>
-    ${S.educs.map(x=>`<option value="${esc(x.email)}" ${x.email===S.filterEduc?"selected":""}>${esc(x.equipe)} · ${esc(x.nom)}</option>`).join("")}
+    ${S.educs.map(x=>`<option value="${esc(x.key)}" ${x.key===S.filterEduc?"selected":""}>${esc(x.equipe)} · ${esc(x.nom)}</option>`).join("")}
   </select></div>
   ${e?`<div class="card"><h2>${esc(e.equipe)} · ${esc(e.nom)}</h2>${statsBlock(M)}<div style="margin-top:12px"><button class="btn ghost" onclick="openChat('${esc(e.email)}')">💬 Ouvrir le chat</button></div></div>`:""}
   <div class="card">${M.length?M.map(m=>matchCard(m,true)).join(""):'<p class="muted">Aucun rapport.</p>'}</div>`;
@@ -393,7 +415,7 @@ function vStats(){
   const since = S.stPer==="30j" ? isoLocal(new Date(Date.now()-30*864e5)) : S.stPer==="7j" ? isoLocal(new Date(Date.now()-7*864e5)) : "";
   const keep = m => (S.stComp==="Tout"||m.competition===S.stComp) && (!since||(m.date||"")>=since);
   const all = S.matchs.filter(keep);
-  const rows = S.educs.map(e=>({e, r:statsRow(all.filter(m=>m.educEmail===e.email))}));
+  const rows = S.educs.map(e=>({e, r:statsRow(all.filter(m=>belongs(m,e)))}));
   const tot = statsRow(all);
   const sgn = n => n>0?`<span class="pos">+${n}</span>`:n<0?`<span class="neg">${n}</span>`:"0";
   const fm = f => f.length?`<span class="forme">${f.map(x=>`<i class="${x}">${x}</i>`).join("")}</span>`:"–";
@@ -413,7 +435,7 @@ function vStats(){
   <div class="card"><h2>Buts par catégorie</h2>
     <div class="stbl-wrap"><table class="stbl">
       <tr><th>Équipe</th><th>MJ</th><th>V</th><th>N</th><th>D</th><th>BP</th><th>BC</th><th>Diff</th><th>BP/m</th><th>BC/m</th><th>Forme</th></tr>
-      ${rows.map(({e,r})=>`<tr class="clk" onclick="S.filterEduc='${esc(e.email)}';go('matchs')">
+      ${rows.map(({e,r})=>`<tr class="clk" onclick="S.filterEduc='${esc(e.key)}';go('matchs')">
         <td><span class="eq">${esc(e.equipe)}</span><span class="ed">${esc(e.nom)}</span></td>
         <td>${r.mj}</td><td>${r.v}</td><td>${r.n}</td><td>${r.d}</td><td><b>${r.bp}</b></td><td><b>${r.bc}</b></td><td>${sgn(r.diff)}</td><td>${r.mbp}</td><td>${r.mbc}</td><td>${fm(r.forme)}</td></tr>`).join("")}
       <tr class="tot"><td>CLUB</td><td>${tot.mj}</td><td>${tot.v}</td><td>${tot.n}</td><td>${tot.d}</td><td>${tot.bp}</td><td>${tot.bc}</td><td>${sgn(tot.diff)}</td><td>${tot.mbp}</td><td>${tot.mbc}</td><td></td></tr>
@@ -427,13 +449,13 @@ function vStats(){
 function openChat(email){ S.tab="chat"; S.chatWith=email; renderTabs(); vChat(); }
 function vChat(){
   if(S.isAdmin && !S.chatWith){
-    $("main").innerHTML = `<div class="card"><h2>Messagerie</h2>${S.educs.map(e=>{
+    $("main").innerHTML = `<div class="card"><h2>Messagerie</h2>${(S.educDocs||[]).map(e=>{
       const m=S.chatMeta[e.email]||{};
       return `<div class="educ-row" onclick="openChat('${esc(e.email)}')"><div><div class="n">${esc(e.equipe)} · ${esc(e.nom)}</div>
       <div class="e">${m.lastText?esc(m.lastText.slice(0,50)):"Aucun message"}</div></div>${unread(e.email)?'<span class="badge miss">Nouveau</span>':""}</div>`;}).join("")||'<p class="muted">Aucun éducateur.</p>'}</div>`;
     return;
   }
-  const who = S.isAdmin ? S.educs.find(e=>e.email===S.chatWith) : null;
+  const who = S.isAdmin ? (S.educDocs||[]).find(e=>e.email===S.chatWith) : null;
   $("main").innerHTML = `
   ${S.isAdmin?`<span class="backlink" onclick="S.chatWith=null;go('chat')">← Conversations</span>`:""}
   <div class="card"><h2>${S.isAdmin?esc((who?.equipe||"")+" · "+(who?.nom||S.chatWith)):"Coordinateur"}</h2>
@@ -464,11 +486,12 @@ function vAcces(){
   <div class="card"><h2>Ajouter un éducateur</h2>
     <label>Email Google</label><input id="aEmail" type="email" placeholder="prenom.nom@gmail.com" autocapitalize="off">
     <div class="row"><div><label>Nom</label><input id="aNom" placeholder="Prénom Nom"></div>
-    <div><label>Équipe</label><input id="aEq" placeholder="U15 A"></div></div>
+    <div><label>Équipe(s)</label><input id="aEq" placeholder="U15 A"></div></div>
+    <p class="muted" style="margin-top:6px">Plusieurs catégories pour le même éducateur ? Sépare-les par une virgule : <b>U12, U13</b></p>
     <div style="margin-top:14px"><button class="btn" onclick="addEduc()">Donner l'accès</button></div>
   </div>
-  <div class="card"><h2>Éducateurs autorisés (${S.educs.length})</h2>
-    ${S.educs.map(e=>`<div class="educ-row" style="cursor:default"><div><div class="n">${esc(e.equipe)} · ${esc(e.nom)}</div><div class="e">${esc(e.email)}</div></div>
+  <div class="card"><h2>Éducateurs autorisés (${(S.educDocs||[]).length})</h2>
+    ${(S.educDocs||[]).map(e=>`<div class="educ-row" style="cursor:default"><div><div class="n">${esc(e.equipe)} · ${esc(e.nom)}</div><div class="e">${esc(e.email)}</div></div>
     <button class="btn danger small" onclick="delEduc('${esc(e.email)}')">Retirer</button></div>`).join("")||'<p class="muted">Aucun.</p>'}
     <p class="muted" style="margin-top:10px">Lien à envoyer aux éducateurs : <b style="color:var(--gold)">${esc(location.href.split("#")[0])}</b></p>
   </div>`;
@@ -476,7 +499,13 @@ function vAcces(){
 async function addEduc(){
   const email=$("aEmail").value.trim().toLowerCase(), nom=$("aNom").value.trim(), equipe=$("aEq").value.trim();
   if(!/^\S+@\S+\.\S+$/.test(email)||!nom||!equipe) return toast("Email, nom et équipe obligatoires");
-  try{ await db.collection("educateurs").doc(email).set({nom,equipe,ajouteLe:TS()}); toast("Accès donné ✓"); }
+  let eq = teamsOf(equipe).join(", ");
+  const ex = (S.educDocs||[]).find(x=>x.email===email);
+  if(ex){
+    const old = teamsOf(ex.equipe), add = teamsOf(equipe).filter(t=>!old.includes(t));
+    if(add.length && confirm(email+" a déjà : "+old.join(", ")+".\n\nOK = AJOUTER "+add.join(", ")+" (il gardera ses catégories)\nAnnuler = REMPLACER par "+eq)) eq = old.concat(add).join(", ");
+  }
+  try{ await db.collection("educateurs").doc(email).set({nom,equipe:eq,ajouteLe:TS()},{merge:true}); toast("Accès donné ✓ · "+eq); ["aEmail","aNom","aEq"].forEach(i=>$(i).value=""); }
   catch(e){ toast("Erreur : "+e.code); }
 }
 async function delEduc(email){
