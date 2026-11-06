@@ -65,9 +65,9 @@ const ADMIN_EMAIL="yesiconcept.rdv@gmail.com";
 firebase.initializeApp({apiKey:"AIzaSyA1NE8TIoR3NafqF39SSOZ3nlJGpXgJ95A",authDomain:"suivi-joueur.firebaseapp.com",projectId:"suivi-joueur",storageBucket:"suivi-joueur.firebasestorage.app",messagingSenderId:"2190589503",appId:"1:2190589503:web:e6df856ce4577d1e41828a"});
 const auth=firebase.auth(),db=firebase.firestore();
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const DOCS=[["bon-partout-fort-nulle-part.html","Bon partout, fort nulle part","La connaissance de soi"],["visible-match-apres-match.html","Visible match après match","La constance"],["motivation-rigueur.html","La motivation démarre, la rigueur tient","La rigueur"]];
+const DOCS=[["bon-partout-fort-nulle-part.html","Bon partout, fort nulle part","La connaissance de soi"],["visible-match-apres-match.html","Visible match après match","La constance"],["motivation-rigueur.html","La motivation démarre, la rigueur tient","La rigueur"],["objectif-cree-la-performance.html","L'objectif crée la performance","L'objectif"]];
 const SEUL=[["segmentation-acquis-yesi.html","La segmentation des acquis","Tes qualités hautes, tes acquis, tes défauts à corriger"]];
-const SEANCE=[["constance","constance-yesi.html","Mon niveau de constance","Après la lecture de « Visible match après match »"],["rigueur","rigueur-yesi.html","Motivation ou rigueur ?","Après la lecture de « La motivation démarre, la rigueur tient »"]];
+const SEANCE=[["constance","constance-yesi.html","Mon niveau de constance","Après la lecture de « Visible match après match »"],["rigueur","rigueur-yesi.html","Motivation ou rigueur ?","Après la lecture de « La motivation démarre, la rigueur tient »"],["objectif","audit-emotion-objectif-yesi.html","Émotion ou objectif ?","Après la lecture de « L'objectif crée la performance »"]];
 let unsub=[],cfg={},isAdmin=false,players=[],cfgs={};
 function stop(){unsub.forEach(f=>f());unsub=[];}
 function g(id){return document.getElementById(id);}
@@ -79,7 +79,7 @@ function render(){
  const deb=(cfg.parcoursDeblocages)||{};let n=0;
  const it=(href,t,s,extra)=>`<a class="item" href="${href}"><span class="n">${++n}</span><span class="t"><b>${esc(t)}</b><span>${esc(s)}</span></span>${extra||arrow}</a>`;
  let h=`<p class="hello">Ton parcours SbSBs</p><p class="muted" style="margin:0">Lis chaque document, puis remplis l'outil qui va avec.</p>`;
- h+=`<div class="sec"><h2>À lire</h2><p class="lead">Les trois documents de la méthode, dans l'ordre.</p><div class="list">${DOCS.map(d=>it(d[0],d[1],d[2])).join("")}</div></div>`;
+ h+=`<div class="sec"><h2>À lire</h2><p class="lead">Les quatre documents de la méthode, dans l'ordre.</p><div class="list">${DOCS.map(d=>it(d[0],d[1],d[2])).join("")}</div></div>`;
  h+=`<div class="sec"><h2>À faire seul</h2><p class="lead">Après la lecture de « Bon partout, fort nulle part ». Envoie ton résultat à ton préparateur à la fin.</p><div class="list">${SEUL.map(d=>it(d[0],d[1],d[2])).join("")}</div></div>`;
  h+=`<div class="sec"><h2>En séance avec Mr Din</h2><p class="lead">Ces audits se remplissent pendant ton rendez-vous. Ils sont débloqués à ce moment-là.</p><div class="list">${SEANCE.map(d=>{const open=isAdmin||deb[d[0]]===true;return open?it(d[1],d[2],d[3],`<span class="tag open">Ouvert</span>`):`<div class="item locked"><span class="n">${++n}</span><span class="t"><b>${esc(d[2])}</b><span>${esc(d[3])}</span></span><span class="tag lock">${lockIco}En séance</span></div>`;}).join("")}</div></div>`;
  if(isAdmin)h+=coachBlock();
