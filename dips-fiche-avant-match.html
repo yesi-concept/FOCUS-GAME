@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D.I.P.S — Protocole d'avant-séance & d'avant-match | Y.E.S.I CONCEPT</title>
+<style>
+:root{
+  --bg:#0f0e0c; --card:#1a1814; --card2:#221f1a; --gold:#c9a24a; --gold2:#e6c878;
+  --beige:#efe4cc; --txt:#f3ece0; --mut:#a89c86; --line:#3a342a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;padding:16px;max-width:760px;margin:0 auto}
+header{text-align:center;padding:18px 8px 14px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.brand{font-family:Georgia,"Times New Roman",serif;font-size:13px;letter-spacing:4px;color:var(--gold)}
+h1{font-family:Georgia,serif;font-size:34px;letter-spacing:6px;color:var(--gold2);margin:6px 0 2px}
+.sub{color:var(--beige);font-size:15px}
+.intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:16px;font-size:14.5px;color:var(--beige)}
+.intro b{color:var(--gold2)}
+.mode{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.mode button{background:var(--card2);color:var(--mut);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+.mode button.on{background:var(--gold);color:#14120f;border-color:var(--gold)}
+.ident{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.ident label{font-size:12px;color:var(--mut);display:block;margin-bottom:3px}
+.ident .full{grid-column:1/-1}
+input,textarea{width:100%;background:var(--card2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:15px;font-family:inherit}
+input:focus,textarea:focus{outline:none;border-color:var(--gold)}
+textarea{min-height:84px;resize:vertical}
+.timeline{display:flex;justify-content:space-between;align-items:center;margin:0 0 18px;padding:10px 6px;background:var(--card);border-radius:12px;border:1px solid var(--line)}
+.timeline .step{flex:1;text-align:center;font-size:11px;color:var(--mut)}
+.timeline .step b{display:block;font-family:Georgia,serif;font-size:22px;color:var(--gold2)}
+.timeline .arrow{color:var(--gold);font-size:14px}
+.bloc{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:16px;page-break-inside:avoid}
+.bloc-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.letter{width:48px;height:48px;border-radius:50%;background:var(--gold);color:#14120f;font-family:Georgia,serif;font-size:26px;font-weight:bold;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bloc h2{font-family:Georgia,serif;font-size:21px;color:var(--gold2)}
+.quand{display:inline-block;font-size:12.5px;background:#2b261d;color:var(--gold2);border:1px solid var(--gold);border-radius:20px;padding:3px 10px;margin-top:2px}
+.but{font-size:14.5px;color:var(--beige);margin:8px 0 10px}
+.but b{color:var(--gold2)}
+.ex-title{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chip{background:var(--card2);border:1px solid var(--line);color:var(--beige);border-radius:16px;padding:6px 11px;font-size:13px;cursor:pointer}
+.chip:active{border-color:var(--gold)}
+.q{font-size:14px;color:var(--gold2);margin:12px 0 5px;font-weight:600}
+.hint{font-size:12px;color:var(--mut);margin-bottom:5px}
+.rule{font-size:13px;color:var(--mut);border-top:1px dashed var(--line);margin-top:12px;padding-top:8px}
+.rule b{color:var(--beige)}
+.note{display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+.note span{font-size:13px;color:var(--beige);flex:1}
+.note input{width:auto;flex:2;padding:0;accent-color:var(--gold)}
+.note output{min-width:42px;text-align:right;font-family:Georgia,serif;font-size:18px;color:var(--gold2)}
+.engage{background:var(--card);border:1px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:16px}
+.engage h2{font-family:Georgia,serif;font-size:19px;color:var(--gold2);margin-bottom:8px}
+.score{display:grid;grid-template-columns:repeat(4,1fr) 1.3fr;gap:6px;margin-bottom:12px;text-align:center}
+.score div{background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:8px 2px;font-size:11px;color:var(--mut)}
+.score b{display:block;font-family:Georgia,serif;font-size:18px;color:var(--gold2)}
+.score .moy{border-color:var(--gold)}
+.actions{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 25%);padding:18px 0 10px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{border:none;border-radius:10px;padding:13px 8px;font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-gold{background:var(--gold);color:#14120f}
+.btn-out{background:var(--card2);color:var(--gold2);border:1px solid var(--gold)}
+.btn-wide{grid-column:1/-1}
+.saved{text-align:center;font-size:12px;color:var(--mut);height:16px}
+footer{text-align:center;color:var(--mut);font-size:12px;padding:10px 0 30px}
+@media print{
+  :root{--bg:#fff;--card:#fff;--card2:#fff;--txt:#1a1814;--beige:#2c2820;--mut:#6b6253;--line:#cdbf9f;--gold:#a8812e;--gold2:#8a6a22}
+  body{padding:0;font-size:12px}
+  .actions,.saved,.chips,.ex-title,.mode{display:none!important}
+  .letter,.mode button.on{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .note input{display:none}
+  .print-val{white-space:pre-wrap}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Y.E.S.I CONCEPT</div>
+  <h1>D.I.P.S</h1>
+  <div class="sub" id="sousTitre">Le protocole d'avant-séance</div>
+</header>
+
+<div class="intro">
+  Le <b>D.I.P.S</b> est ta routine mentale de préparation. Chaque lettre s'accroche à un <b>moment réel</b> de ton arrivée à la séance ou au match : tu n'ajoutes rien à ta journée, tu donnes un sens à ce que tu fais déjà.<br><br>
+  On le <b>travaille à l'entraînement</b>, séance après séance, pour qu'il soit <b>automatique le jour du match</b>. Un protocole qu'on découvre en match ne tient pas sous la pression.<br><br>
+  Remplis chaque étape avec <b>tes</b> mots, touche un exemple pour l'ajouter, puis note chaque étape sur 10.
+</div>
+
+<div class="mode">
+  <button id="btnEntr" onclick="setMode('entrainement')">Entraînement</button>
+  <button id="btnMatch" onclick="setMode('match')">Match</button>
+</div>
+
+<div class="ident">
+  <div class="full"><label>Joueur / Joueuse</label><input id="joueur" placeholder="Nom Prénom"></div>
+  <div><label>Date</label><input id="date" type="date"></div>
+  <div><label id="lblMatch">Séance</label><input id="match" placeholder="ex : séance du mardi"></div>
+</div>
+
+<div class="timeline">
+  <div class="step"><b>D</b>Sur le chemin</div><span class="arrow">›</span>
+  <div class="step"><b>I</b>Arrivée au stade</div><span class="arrow">›</span>
+  <div class="step"><b>P</b>Vestiaire / échauffement</div><span class="arrow">›</span>
+  <div class="step"><b>S</b><span class="txtDebut">Début de séance</span></div>
+</div>
+
+<!-- D -->
+<section class="bloc">
+  <div class="bloc-head"><div class="letter">D</div><div><h2>Distraction</h2><span class="quand">Quand : sur le chemin du stade</span></div></div>
+  <p class="but"><b>But :</b> ne pas vivre <span class="txtEvt">la séance</span> avant qu'elle commence. Tu occupes ton esprit avec autre chose pour arriver frais, sans t'épuiser en pensées ou en scénarios.</p>
+  <div class="ex-title">Exemples (touche pour ajouter)</div>
+  <div class="chips" data-target="d">
+    <span class="chip">Ma playlist</span>
+    <span class="chip">Un podcast ou une vidéo drôle</span>
+    <span class="chip">Discuter d'autre chose avec un proche</span>
+    <span class="chip">Lire quelques pages</span>
+    <span class="chip">Un jeu sur le téléphone</span>
+    <span class="chip">Regarder le paysage, compter les arrêts</span>
+    <span class="chip">Un appel à un ami</span>
+  </div>
+  <div class="q">Ma distraction sur le chemin :</div>
+  <textarea id="d" placeholder="Ce que je fais pour ne pas y penser pendant le trajet…"></textarea>
+  <p class="rule"><b>Règle :</b> pas de vidéos de foot, pas de réseaux qui en parlent, pas de discussion tactique sur le trajet.</p>
+  <div class="note"><span>Je l'ai bien fait</span><input type="range" min="0" max="10" value="0" id="nd"><output id="ond">–</output></div>
+</section>
+
+<!-- I -->
+<section class="bloc">
+  <div class="bloc-head"><div class="letter">I</div><div><h2>Introspection</h2><span class="quand">Quand : en arrivant au stade</span></div></div>
+  <p class="but"><b>But :</b> te reconnecter à toi et gonfler ta confiance. Tu regardes ce que <b>toi</b> tu as, jamais ce que les autres ont.</p>
+  <div class="q">1. Quelles qualités m'ont amené ici aujourd'hui ?</div>
+  <div class="hint">Jamais de comparaison avec les autres.</div>
+  <div class="chips" data-target="i1">
+    <span class="chip">Ma vitesse</span><span class="chip">Mon jeu de tête</span><span class="chip">Ma qualité de passe</span>
+    <span class="chip">Mon mental, je ne lâche rien</span><span class="chip">Ma lecture du jeu</span><span class="chip">Mon sérieux à l'entraînement</span>
+  </div>
+  <textarea id="i1" placeholder="Mes qualités…"></textarea>
+
+  <div class="q">2. Quelle action ou quel moment prouve que j'en suis capable ?</div>
+  <div class="chips" data-target="i2">
+    <span class="chip">Mon dernier bon match</span><span class="chip">Un but / une passe décisive</span>
+    <span class="chip">Un duel gagné contre un plus fort</span><span class="chip">Un exercice réussi la semaine dernière</span>
+    <span class="chip">Une séance où j'ai été au-dessus</span>
+  </div>
+  <textarea id="i2" placeholder="Ma preuve…"></textarea>
+
+  <div class="q">3. Qu'ai-je travaillé qui me rend prêt aujourd'hui ?</div>
+  <div class="chips" data-target="i3">
+    <span class="chip">Mes séances de la semaine</span><span class="chip">Mon sommeil et mon alimentation</span>
+    <span class="chip">Le travail spécifique de mon poste</span><span class="chip">Mes objectifs préparés</span>
+  </div>
+  <textarea id="i3" placeholder="Ce qui me rend prêt…"></textarea>
+  <div class="note"><span>Je l'ai bien fait</span><input type="range" min="0" max="10" value="0" id="ni"><output id="oni">–</output></div>
+</section>
+
+<!-- P -->
+<section class="bloc">
+  <div class="bloc-head"><div class="letter">P</div><div><h2>Pensée positive</h2><span class="quand">Quand : en te changeant et/ou à l'échauffement</span></div></div>
+  <p class="but"><b>But :</b> remplir ta tête d'images et de phrases qui te portent. Deux temps, 60 secondes max chacun.</p>
+
+  <div class="q">P1 — Mon souvenir de réussite</div>
+  <div class="hint">Revis une action réussie comme un film : ce que tu as vu, entendu, ressenti.</div>
+  <div class="chips" data-target="p1">
+    <span class="chip">Mon plus beau but</span><span class="chip">Un tacle parfait au bon moment</span>
+    <span class="chip">Le match où j'ai été le meilleur</span><span class="chip">Un exercice où tout me réussissait</span>
+  </div>
+  <textarea id="p1" placeholder="Je revois… j'entends… je ressens…"></textarea>
+
+  <div class="q">P2 — Mon discours interne</div>
+  <div class="hint">Des phrases courtes, au présent, à la 1re personne. Ce que tu te dis en laçant tes crampons.</div>
+  <div class="chips" data-target="p2">
+    <span class="chip">« Je suis prêt. »</span><span class="chip">« Je joue mon jeu. »</span>
+    <span class="chip">« Chaque ballon est une occasion. »</span><span class="chip">« Je mérite ma place. »</span>
+    <span class="chip">« Une erreur, j'efface, je repars. »</span><span class="chip">« Aujourd'hui je progresse. »</span>
+  </div>
+  <textarea id="p2" placeholder="Mes phrases…"></textarea>
+  <div class="note"><span>Je l'ai bien fait</span><input type="range" min="0" max="10" value="0" id="np"><output id="onp">–</output></div>
+</section>
+
+<!-- S -->
+<section class="bloc">
+  <div class="bloc-head"><div class="letter">S</div><div><h2>Souffle</h2><span class="quand">Quand : <span class="txtDebutMin">début de la séance</span></span></div></div>
+  <p class="but"><b>But :</b> faire redescendre la tension et ancrer ton corps dans l'instant. C'est la dernière étape, celle qui déclenche ton entrée dans <span class="txtEvt">la séance</span>.</p>
+  <div class="ex-title">Exemples (touche pour ajouter)</div>
+  <div class="chips" data-target="s">
+    <span class="chip">3 respirations : inspire 4 s, expire 6 s</span>
+    <span class="chip">Respiration carrée 4-4-4-4</span>
+    <span class="chip">Une grande inspiration, je relâche les épaules</span>
+    <span class="chip">Expirer lentement en touchant la pelouse</span>
+    <span class="chip">Respirer en fixant un point du terrain</span>
+  </div>
+  <div class="q">Ma respiration de départ :</div>
+  <textarea id="s" placeholder="Ce que je fais exactement, et à quel moment…"></textarea>
+  <div class="q">Mon geste d'ancrage (facultatif) :</div>
+  <textarea id="s2" placeholder="ex : je touche mon protège-tibia, je tape deux fois dans les mains…"></textarea>
+  <p class="rule" id="regleS"></p>
+  <div class="note"><span>Je l'ai bien fait</span><input type="range" min="0" max="10" value="0" id="ns"><output id="ons">–</output></div>
+</section>
+
+<section class="engage">
+  <h2 id="titreBilan">Mon ressenti après la séance</h2>
+  <div class="score">
+    <div>D<b id="sd">–</b></div><div>I<b id="si">–</b></div><div>P<b id="sp">–</b></div><div>S<b id="ss">–</b></div>
+    <div class="moy">Moyenne<b id="smoy">–</b></div>
+  </div>
+  <div class="hint">Le protocole m'a-t-il aidé ? Qu'est-ce que je garde, qu'est-ce que j'ajuste pour la prochaine fois ?</div>
+  <textarea id="bilan" placeholder="Mon retour…"></textarea>
+</section>
+
+<div class="saved" id="saved"></div>
+
+<div class="actions">
+  <button class="btn btn-gold btn-wide" onclick="sendMail()">✉ Envoyer à Y.E.S.I CONCEPT</button>
+  <button class="btn btn-out" onclick="exportPDF()">⬇ PDF</button>
+  <button class="btn btn-out" onclick="exportHTML()">⬇ HTML</button>
+  <button class="btn btn-out btn-wide" onclick="resetFiche()" style="font-weight:400;font-size:13px">Nouvelle fiche (tout effacer)</button>
+</div>
+
+<footer>Y.E.S.I CONCEPT — Préparation mentale de la performance<br>yesiconcept.rdv@gmail.com</footer>
+
+<script>
+const MAIL="yesiconcept.rdv@gmail.com";
+const KEY="yesi_dips_fiche";
+const FIELDS=["joueur","date","match","d","i1","i2","i3","p1","p2","s","s2","bilan"];
+const NOTES=["nd","ni","np","ns"];
+const LABELS={joueur:"Joueur",date:"Date",match:"Séance / Match",d:"D — Distraction (sur le chemin)",i1:"I — Qualités qui m'ont amené ici",i2:"I — Preuve que j'en suis capable",i3:"I — Ce que j'ai travaillé",p1:"P1 — Souvenir de réussite",p2:"P2 — Discours interne",s:"S — Respiration de départ",s2:"S — Geste d'ancrage",bilan:"Ressenti après"};
+const $=id=>document.getElementById(id);
+let mode="entrainement";
+
+const TXT={
+  entrainement:{sous:"Le protocole d'avant-séance",lbl:"Séance",ph:"ex : séance du mardi",evt:"la séance",debut:"Début de séance",debutMin:"début de la séance",bilan:"Mon ressenti après la séance",
+    regle:"<b>Règle :</b> à l'entraînement, D, I et P se font avant les consignes du coach. Le <b>S</b> se fait juste avant le premier exercice. Répète le même ordre à chaque séance : c'est la répétition qui rend le protocole automatique."},
+  match:{sous:"Le protocole d'avant-match",lbl:"Match",ph:"ex : vs Créteil U17",evt:"le match",debut:"Coup d'envoi",debutMin:"début du match",bilan:"Mon ressenti après le match",
+    regle:"<b>Règle :</b> dès que la causerie du coach démarre, D, I et P sont fermés. Seul le <b>S</b> reste autorisé, jusque dans le couloir avant d'entrer sur la pelouse."}
+};
+
+function setMode(m){
+  mode=m;const t=TXT[m];
+  $("btnEntr").classList.toggle("on",m==="entrainement");
+  $("btnMatch").classList.toggle("on",m==="match");
+  $("sousTitre").textContent=t.sous;$("lblMatch").textContent=t.lbl;$("match").placeholder=t.ph;
+  document.querySelectorAll(".txtEvt").forEach(e=>e.textContent=t.evt);
+  document.querySelectorAll(".txtDebut").forEach(e=>e.textContent=t.debut);
+  document.querySelectorAll(".txtDebutMin").forEach(e=>e.textContent=t.debutMin);
+  $("titreBilan").textContent=t.bilan;$("regleS").innerHTML=t.regle;
+  save();
+}
+
+function majNotes(){
+  const vals=[];
+  NOTES.forEach((n,k)=>{
+    const v=+$(n).value, touched=$(n).dataset.touched==="1";
+    const txt=touched?v+"/10":"–";
+    $("o"+n).textContent=txt;
+    $(["sd","si","sp","ss"][k]).textContent=touched?v:"–";
+    if(touched)vals.push(v);
+  });
+  $("smoy").textContent=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1)+"/10":"–";
+}
+
+function load(){
+  let data={};
+  try{data=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
+  FIELDS.forEach(f=>{if(data[f])$(f).value=data[f]});
+  NOTES.forEach(n=>{if(data[n]!==undefined&&data[n]!==null){$(n).value=data[n];$(n).dataset.touched="1"}});
+  if(!$("date").value)$("date").value=new Date().toISOString().slice(0,10);
+  setMode(data.mode||"entrainement");majNotes();
+}
+let t;
+function save(){
+  const data={mode};FIELDS.forEach(f=>data[f]=$(f).value);
+  NOTES.forEach(n=>data[n]=$(n).dataset.touched==="1"?+$(n).value:null);
+  try{localStorage.setItem(KEY,JSON.stringify(data));$("saved").textContent="Enregistré automatiquement";clearTimeout(t);t=setTimeout(()=>$("saved").textContent="",1500)}catch(e){}
+}
+FIELDS.forEach(f=>$(f).addEventListener("input",save));
+NOTES.forEach(n=>$(n).addEventListener("input",()=>{$(n).dataset.touched="1";majNotes();save()}));
+
+document.querySelectorAll(".chips").forEach(box=>{
+  box.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{
+    const ta=$(box.dataset.target);
+    ta.value=ta.value.trim()?ta.value.trim()+"\n"+c.textContent:c.textContent;
+    save();
+  }));
+});
+
+function fmtDate(v){if(!v)return"";const[y,m,d]=v.split("-");return d+"/"+m+"/"+y}
+function noteTxt(n){return $(n).dataset.touched==="1"?$(n).value+"/10":"non notée"}
+
+function sendMail(){
+  const j=$("joueur").value||"Joueur";
+  const typ=mode==="match"?"MATCH":"ENTRAÎNEMENT";
+  let body="FICHE D.I.P.S — "+typ+"\nY.E.S.I CONCEPT\n\n";
+  FIELDS.forEach(f=>{
+    const v=f==="date"?fmtDate($(f).value):$(f).value.trim();
+    body+=LABELS[f]+" :\n"+(v||"—")+"\n\n";
+  });
+  body+="NOTES /10\nD : "+noteTxt("nd")+"\nI : "+noteTxt("ni")+"\nP : "+noteTxt("np")+"\nS : "+noteTxt("ns")+"\nMoyenne : "+$("smoy").textContent+"\n";
+  const subject="Fiche D.I.P.S "+(mode==="match"?"Match":"Entraînement")+" — "+j+" — "+fmtDate($("date").value);
+  location.href="mailto:"+MAIL+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+}
+
+function exportPDF(){
+  const swaps=[];
+  document.querySelectorAll("textarea,input:not([type=range])").forEach(el=>{
+    const div=document.createElement("div");
+    div.className="print-val";
+    div.style.cssText="border:1px solid #cdbf9f;border-radius:6px;padding:8px;min-height:28px;margin-bottom:4px";
+    div.textContent=el.type==="date"?fmtDate(el.value):(el.value||" ");
+    el.style.display="none";el.after(div);swaps.push([el,div]);
+  });
+  window.print();
+  setTimeout(()=>swaps.forEach(([el,div])=>{el.style.display="";div.remove()}),500);
+}
+
+function exportHTML(){
+  const clone=document.documentElement.cloneNode(true);
+  FIELDS.forEach(f=>{
+    const el=clone.querySelector("#"+f);
+    if(el.tagName==="TEXTAREA")el.textContent=$(f).value;else el.setAttribute("value",$(f).value);
+  });
+  NOTES.forEach(n=>{const el=clone.querySelector("#"+n);el.setAttribute("value",$(n).value);if($(n).dataset.touched==="1")el.setAttribute("data-touched","1")});
+  clone.querySelectorAll("script").forEach(s=>{s.textContent=s.textContent.replace('setMode(data.mode||"entrainement")','setMode(data.mode||"'+mode+'")')});
+  const blob=new Blob(["<!DOCTYPE html>\n"+clone.outerHTML],{type:"text/html"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="DIPS-"+(mode==="match"?"match":"entrainement")+"-"+($("joueur").value||"joueur").replace(/\s+/g,"-")+"-"+$("date").value+".html";
+  a.click();
+}
+
+function resetFiche(){
+  if(!confirm("Effacer toute la fiche ?"))return;
+  const j=$("joueur").value;
+  try{localStorage.removeItem(KEY)}catch(e){}
+  FIELDS.forEach(f=>$(f).value="");
+  $("joueur").value=j;
+  NOTES.forEach(n=>{$(n).value=0;delete $(n).dataset.touched});
+  $("date").value=new Date().toISOString().slice(0,10);
+  majNotes();save();
+}
+load();
+</script>
+</body>
+</html>
