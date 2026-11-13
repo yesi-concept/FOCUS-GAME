@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprendre le D.I.P.S | Y.E.S.I CONCEPT</title>
+<style>
+:root{
+  --bg:#0f0e0c; --card:#1a1814; --card2:#221f1a; --line:#3a342a;
+  --blue:#c9a24a; --blue2:#e6c878; --txt:#f3ece0; --mut:#a89c86; --beige:#efe4cc;
+  --red:#d9473d; --stab:#3b7fe0; --green:#3fae4f; --gold:#e6c878;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;font-size:16px}
+.wrap{max-width:720px;margin:0 auto;padding:18px 16px 60px}
+header{text-align:center;padding:26px 10px 22px;border-bottom:1px solid var(--line);margin-bottom:22px}
+/*brand*/.brandX{font-family:Georgia,"Times New Roman",serif;font-size:30px;letter-spacing:4px;font-weight:700}
+.brand span{display:block;font-family:inherit;font-size:13px;letter-spacing:7px;color:var(--blue);margin-top:2px}
+.back{display:inline-block;color:var(--gold);text-decoration:none;font-size:14px;padding:4px 0}
+.logo{width:110px;height:auto;border-radius:10px;display:block;margin:0 auto 6px}
+h1{font-family:Georgia,serif;font-size:25px;margin-top:10px;line-height:1.25;color:var(--txt)}
+.go{display:block;text-align:center;background:var(--blue);color:#14120f;text-decoration:none;border-radius:12px;padding:14px;font-weight:700;margin-top:10px}
+h1 b{color:var(--blue2)}
+.sub{color:var(--mut);margin-top:8px;font-size:15px}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 18px;margin-bottom:16px}
+h2{font-size:19px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+h2 .n{background:var(--blue);color:#14120f;border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+p{margin-bottom:10px}
+.mut{color:var(--mut)}
+.goal{background:linear-gradient(135deg,#2b261d,#1a1814);border:1px solid var(--blue);text-align:center}
+.goal .big{font-size:21px;font-weight:700;margin:6px 0 10px}
+.goal .big b{color:var(--green)}
+ul.clean{list-style:none}
+ul.clean li{padding:7px 0 7px 26px;position:relative;border-bottom:1px dashed var(--line)}
+ul.clean li:last-child{border-bottom:none}
+ul.clean li:before{content:"›";position:absolute;left:6px;color:var(--blue2);font-weight:700}
+.zones{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.zone{border-radius:12px;padding:12px 8px;text-align:center;font-size:13px}
+.zone b{display:block;font-size:14px;margin-bottom:4px}
+.z1{background:rgba(255,77,94,.13);border:1px solid var(--red)}
+.z2{background:rgba(47,140,255,.13);border:1px solid var(--stab)}
+.z3{background:rgba(47,210,122,.13);border:1px solid var(--green)}
+.letter{background:var(--card2);border-radius:14px;padding:16px;margin-bottom:12px;border-left:5px solid var(--blue)}
+.letter .head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.letter .L{font-family:Georgia,serif;font-size:34px;font-weight:700;color:var(--blue2);width:44px;text-align:center}
+.letter .t{font-weight:700;font-size:18px}
+.letter .r{font-size:13px;color:var(--gold)}
+.tag{display:inline-block;font-size:12px;padding:3px 9px;border-radius:20px;background:#14120f;border:1px solid var(--line);color:var(--mut);margin:2px 4px 2px 0}
+.ex{background:#14120f;border-radius:10px;padding:10px 12px;margin-top:8px;font-size:14px;color:var(--mut)}
+.ex b{color:var(--txt)}
+.flow{display:flex;justify-content:space-between;align-items:center;margin:10px 0 14px;gap:4px}
+.flow div{flex:1;text-align:center;background:var(--card2);border-radius:10px;padding:8px 2px;font-size:12px}
+.flow div b{display:block;font-size:20px;color:var(--blue2);font-family:Georgia,serif}
+.flow i{color:var(--mut);font-style:normal}
+.time{border-left:2px solid var(--blue);margin-left:8px;padding-left:16px}
+.time .st{position:relative;padding:6px 0 12px}
+.time .st:before{content:"";position:absolute;left:-23px;top:11px;width:12px;height:12px;border-radius:50%;background:var(--blue)}
+.time .st.stop:before{background:var(--red)}
+.time .st.sota:before{background:var(--gold)}
+.time .st b{color:var(--blue2)}
+.alert{background:rgba(255,77,94,.1);border:1px solid var(--red);border-radius:12px;padding:12px;font-size:14px;margin-top:8px}
+.steps{display:grid;gap:10px;margin-top:6px}
+.step{background:var(--card2);border-radius:12px;padding:12px 14px;display:flex;gap:12px}
+.step .k{font-weight:800;color:var(--gold);min-width:68px;font-size:14px}
+.err li:before{content:"✕";color:var(--red)}
+.ok li:before{content:"✓";color:var(--green)}
+.start{border:1px solid var(--gold)}
+.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.field label{font-size:14px;color:var(--mut)}
+input,textarea{background:#14120f;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:11px 12px;font-size:16px;font-family:inherit;width:100%}
+textarea{min-height:70px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.check{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+.check input{width:22px;height:22px;flex-shrink:0;margin-top:2px;accent-color:var(--green)}
+.bar{height:10px;background:#14120f;border-radius:6px;overflow:hidden;margin:12px 0 6px}
+.bar div{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--green));transition:width .3s}
+.ready{display:none;color:var(--txt);text-align:center;background:rgba(47,210,122,.12);border:1px solid var(--green);border-radius:12px;padding:14px;margin-top:12px;font-weight:700}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+button{flex:1;min-width:140px;background:var(--blue);color:#14120f;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer}
+button.sec{background:var(--card2);color:var(--txt);border:1px solid var(--line)}
+.quote{font-family:Georgia,serif;font-style:italic;font-size:18px;text-align:center;color:var(--blue2);padding:6px 4px}
+footer{text-align:center;color:var(--mut);font-size:13px;margin-top:20px}
+@media print{
+  body{background:#fff;color:#111}
+  section,.letter,.step,.ex,.flow div,.zone,.goal{background:#fff!important;border-color:#bbb!important;color:#111!important}
+  .mut,.ex,.sub{color:#444!important}
+  .btns,.noprint,.back,.go{display:none!important}
+  section{page-break-inside:avoid}
+  input,textarea{background:#fff;color:#111;border-color:#999}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<a href="parcours.html" class="back">‹ Mon parcours</a>
+<header>
+  <img class="logo" src="data:image/jpeg;base64,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" alt="Y.E.S.I CONCEPT">
+  <h1>Comprendre le <b>D.I.P.S</b><br>avant de le pratiquer</h1>
+  <p class="sub">À lire en entier avant ta première utilisation. Tu ne peux pas appliquer correctement un protocole que tu ne comprends pas.</p>
+</header>
+
+<!-- BUT -->
+<section class="goal">
+  <p class="mut">LE BUT</p>
+  <p class="big">Arriver sur le terrain dans un <b>état mental de performance optimal</b>.</p>
+  <p>Pas « motivé ». Pas « excité ». Pas « stressé mais ça va ». <b>Prêt.</b></p>
+</section>
+
+<!-- 1. ETAT OPTIMAL -->
+<section>
+  <h2><span class="n">1</span>C'est quoi, un état de performance optimal ?</h2>
+  <p>C'est l'état dans lequel ton cerveau te laisse jouer à ton vrai niveau. Il réunit 4 choses en même temps :</p>
+  <ul class="clean">
+    <li><b>Le calme</b> : ton corps n'est pas en alerte, ta respiration est posée.</li>
+    <li><b>L'énergie</b> : tu es activé, pas endormi. Calme ne veut pas dire mou.</li>
+    <li><b>La confiance</b> : tu sais ce que tu vaux, sans te comparer à personne.</li>
+    <li><b>Le focus</b> : ton attention est sur ce que TU dois faire, pas sur l'enjeu, l'adversaire ou le regard des autres.</li>
+  </ul>
+  <p style="margin-top:12px">Chez Y.E.S.I, on parle de <b>3 zones</b> :</p>
+  <div class="zones">
+    <div class="zone z1"><b>Alerte</b>Stress, doute, tête qui tourne</div>
+    <div class="zone z2"><b>Stabilité</b>Calme, lucide, sous contrôle</div>
+    <div class="zone z3"><b>Performance</b>Prêt, confiant, concentré</div>
+  </div>
+  <p class="mut">Le D.I.P.S sert à t'emmener dans la zone verte <b>avant</b> le coup d'envoi. Règle n°1 : on ne saute pas directement du rouge au vert, on passe toujours par la stabilité. C'est exactement ce que fait l'ordre des 4 lettres.</p>
+</section>
+
+<!-- 2. POURQUOI -->
+<section>
+  <h2><span class="n">2</span>Pourquoi tu en as besoin</h2>
+  <p>Avant un match, la tête travaille toute seule : « et si je rate ? », « le coach va me sortir », « leur ailier est rapide », « il y a des gens qui regardent »…</p>
+  <p>Ce n'est pas un défaut, <b>c'est le fonctionnement normal du cerveau</b> face à un enjeu. Le problème, c'est de le laisser décider à ta place. Un joueur qui arrive sur le terrain en zone d'alerte perd ses 10 premières minutes, parfois tout le match.</p>
+  <p>Le D.I.P.S remplace ce bruit par une <b>routine que tu contrôles</b>. Tu arrêtes de subir ton état d'avant-match : tu le construis.</p>
+</section>
+
+<!-- 3. LES 4 LETTRES -->
+<section>
+  <h2><span class="n">3</span>Les 4 lettres, une par une</h2>
+  <div class="flow">
+    <div><b>D</b>Vider</div><i>›</i>
+    <div><b>I</b>Recentrer</div><i>›</i>
+    <div><b>P</b>Charger</div><i>›</i>
+    <div><b>S</b>Ancrer</div>
+  </div>
+
+  <div class="letter">
+    <div class="head"><div class="L">D</div><div><div class="t">Distraction</div><div class="r">Rôle : couper la rumination</div></div></div>
+    <p>Tu occupes ton esprit avec autre chose pour <b>arrêter de penser au match qui arrive</b>. On ne se prépare pas en ressassant.</p>
+    <span class="tag">Musique</span><span class="tag">Lecture</span><span class="tag">Discussion légère</span><span class="tag">Autre</span>
+    <div class="ex"><b>Exemple :</b> sur le trajet, casque sur les oreilles, ta playlist. Si une pensée « match » revient, tu la laisses passer et tu reviens à la musique.</div>
+    <div class="ex" style="border:1px solid var(--red)"><b>Sur le banc :</b> ton 1er D.I.P.S (en venant au stade) garde la Distraction. Le 2nd D.I.P.S, lancé au coup d'envoi, n'en a pas : le D = <b>Diagnostic du vis-à-vis</b> (voir partie 4).</div>
+  </div>
+
+  <div class="letter">
+    <div class="head"><div class="L">I</div><div><div class="t">Introspection</div><div class="r">Rôle : se recentrer sur soi et gonfler la confiance</div></div></div>
+    <p>Tu te poses <b>3 questions</b>, et tu y réponds <b>dans ta tête</b> :</p>
+    <ul class="clean">
+      <li>Quelles qualités m'ont amené ici aujourd'hui ?</li>
+      <li>Quelle action ou quel match prouve que j'en suis capable ?</li>
+      <li>Qu'est-ce que j'ai travaillé qui me rend prêt ?</li>
+    </ul>
+    <div class="ex"><b>Interdit :</b> te comparer aux autres (« je suis moins rapide que lui »). L'introspection parle de TOI, uniquement.</div>
+  </div>
+
+  <div class="letter">
+    <div class="head"><div class="L">P</div><div><div class="t">Pensée positive</div><div class="r">Rôle : se charger en confiance — 60 s max par étape</div></div></div>
+    <p><b>P1 — Le souvenir.</b> Tu revois précisément une action ou un match réussi : où tu étais, ce que tu as fait, ce que tu as ressenti.</p>
+    <p><b>P2 — Le discours interne.</b> Tu te parles avec des phrases courtes, au présent, qui t'appartiennent.</p>
+    <div class="ex"><b>Exemple P2 :</b> « Je suis prêt. Je gagne mes duels. Je joue simple et juste. »<br>Pas : « J'espère que je vais pas rater » (négatif, au futur, sans contrôle).</div>
+  </div>
+
+  <div class="letter">
+    <div class="head"><div class="L">S</div><div><div class="t">Souffle</div><div class="r">Rôle : ancrer l'état dans le corps</div></div></div>
+    <p>Quelques respirations lentes et profondes : inspiration par le nez, expiration longue par la bouche. Le souffle stabilise le corps, et le corps garde l'état que la tête a construit.</p>
+    <div class="ex"><b>C'est la seule lettre encore autorisée</b> après la causerie, jusque dans le couloir avant d'entrer sur la pelouse.</div>
+  </div>
+
+  <p class="mut"><b>L'ordre ne change jamais.</b> On vide (D) avant de remplir (I, P). On ancre (S) en dernier, juste avant l'action. Inverser l'ordre, c'est remplir un verre déjà plein.</p>
+</section>
+
+<!-- 4. QUAND -->
+<section>
+  <h2><span class="n">4</span>Quand le faire</h2>
+  <p>Le D.I.P.S ne se fait pas « quand tu y penses ». Chaque lettre est <b>accrochée à un moment réel</b> de ta routine d'avant-match :</p>
+  <div class="time">
+    <div class="st"><b>D</b> — Sur le chemin (transport, trajet à pied, bus)</div>
+    <div class="st"><b>I</b> — En arrivant au stade / au vestiaire</div>
+    <div class="st"><b>P</b> — En te changeant et/ou pendant l'échauffement</div>
+    <div class="st stop"><b>Causerie du coach</b> — D, I et P sont fermés à partir d'ici</div>
+    <div class="st"><b>S</b> — Fin de causerie, couloir, entrée sur le terrain</div>
+    <div class="st sota"><b>En jeu</b> — Ce n'est plus le D.I.P.S. Après une erreur ou un temps faible, c'est le <b>S.O.T.A</b> qui prend le relais.</div>
+  </div>
+  <div class="alert" style="background:rgba(47,140,255,.1);border-color:var(--blue)"><b>Règle n°1 : le D.I.P.S se fait en venant au stade, quoi qu'il arrive.</b> Titulaire ou remplaçant, tu ne sais jamais à l'avance si tu vas jouer, ni quand. Tu fais ton D.I.P.S complet comme si tu entrais au coup d'envoi.</div>
+  <div class="alert"><b>Tu es sur le banc ? Un 2nd D.I.P.S démarre au coup d'envoi.</b> Même ordre, même rigueur. Mais <b>pas de Distraction</b> : sur le banc, tu dois rester dans le match. Le D devient <b>Diagnostic du vis-à-vis</b>.
+    <div class="time" style="margin-top:10px">
+      <div class="st"><b>D — Diagnostic</b> — Sur le banc : tu observes le joueur que tu vas affronter en entrant. Ses points forts, ses points faibles, son pied fort, ce qui le met en difficulté.</div>
+      <div class="st"><b>I / P</b> — Pendant l'échauffement au bord du terrain.</div>
+      <div class="st"><b>S</b> — Juste avant de rentrer sur le terrain.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. RESILIENCE -->
+<section>
+  <h2><span class="n">5</span>La résilience : rendre le D.I.P.S automatique</h2>
+  <p class="quote">« Ce que tu répètes à l'entraînement, tu le possèdes en match. »</p>
+  <p>La résilience, ici, c'est ta capacité à <b>retrouver ton état de performance quoi qu'il arrive</b> : mauvais échauffement, retard, pression, public, mauvaise semaine. Ce n'est pas un don, ça se construit.</p>
+  <p>Sous pression, le cerveau n'a pas le temps de réfléchir. Il fait ce qu'il connaît par cœur. Si le D.I.P.S n'est pas automatique, il disparaît le jour où tu en as le plus besoin. C'est comme un geste technique : au début tu penses à chaque détail, puis un jour tu le fais sans y penser.</p>
+  <div class="steps">
+    <div class="step"><div class="k">Étape 1</div><div><b>Conscient.</b> Tu fais chaque lettre avec la fiche, lentement. Tu découvres.</div></div>
+    <div class="step"><div class="k">Étape 2</div><div><b>Guidé.</b> Tu connais l'ordre, tu vérifies juste la fiche avant. Les moments d'ancrage deviennent des réflexes.</div></div>
+    <div class="step"><div class="k">Étape 3</div><div><b>Automatique.</b> Le trajet déclenche la musique, le vestiaire déclenche les questions… sans fiche, sans effort.</div></div>
+  </div>
+  <p style="margin-top:12px" class="mut">Le but final : que tu n'aies <b>plus besoin de l'outil</b>.</p>
+</section>
+
+<!-- 6. A SAVOIR -->
+<section>
+  <h2><span class="n">6</span>Ce qu'il faut savoir avant de commencer</h2>
+  <ul class="clean ok">
+    <li><b>Ça se travaille aussi à l'entraînement.</b> Si tu ne le fais que le jour du match, il ne sera jamais automatique.</li>
+    <li><b>C'est personnel.</b> Ta musique, tes souvenirs, tes phrases. Ce qui marche pour un autre ne marche pas forcément pour toi.</li>
+    <li><b>Toujours les mêmes moments, toujours le même ordre.</b> C'est la répétition qui crée l'automatisme.</li>
+    <li><b>Note chaque lettre sur 10 après coup.</b> Ça te montre où tu progresses et où ça bloque.</li>
+    <li><b>Les premiers essais seront maladroits.</b> C'est normal. Un D.I.P.S raté n'est pas un match raté.</li>
+  </ul>
+  <p style="margin:14px 0 6px"><b>Les erreurs classiques :</b></p>
+  <ul class="clean err">
+    <li>Sauter une lettre parce que « ça va aujourd'hui ».</li>
+    <li>Faire la Distraction trop tard, quand le match est déjà dans la tête.</li>
+    <li>Faire durer la Pensée positive : au-delà de 60 s, on retombe dans la réflexion.</li>
+    <li>Se comparer aux autres pendant l'Introspection.</li>
+    <li>Attendre de « se sentir bien » pour commencer : c'est le D.I.P.S qui t'y amène, pas l'inverse.</li>
+  </ul>
+</section>
+
+<!-- 7. POINT DE DEPART -->
+<section class="start">
+  <h2><span class="n">7</span>Ton point de départ</h2>
+  <p>Un score bas au départ n'est pas un jugement. C'est juste <b>la ligne de départ</b>. Plus le point de départ est bas, plus la marge de progression est grande.</p>
+  <div class="field"><label>Prénom & nom</label><input id="nom" placeholder="Ton nom"></div>
+  <div class="row">
+    <div class="field"><label>Score D.I.P.S actuel (/10)</label><input id="scoreAct" type="number" min="0" max="10" placeholder="ex : 2"></div>
+    <div class="field"><label>Objectif dans 4 semaines (/10)</label><input id="scoreObj" type="number" min="0" max="10" placeholder="ex : 6"></div>
+  </div>
+  <div class="field"><label>La lettre qui me paraît la plus difficile, et pourquoi</label><textarea id="diff" placeholder="ex : l'Introspection, parce que je pense vite à ce que je rate…"></textarea></div>
+
+  <p style="margin:14px 0 8px"><b>Plan de 4 semaines</b></p>
+  <div class="steps">
+    <div class="step"><div class="k">Semaine 1</div><div>Découverte à l'entraînement, avec la fiche, 2 séances minimum.</div></div>
+    <div class="step"><div class="k">Semaine 2</div><div>Toutes les séances + choisir ses moments d'ancrage fixes.</div></div>
+    <div class="step"><div class="k">Semaine 3</div><div>Premier D.I.P.S complet en match. Noter chaque lettre /10.</div></div>
+    <div class="step"><div class="k">Semaine 4</div><div>Tenter sans regarder la fiche. Bilan avec le coach Y.E.S.I.</div></div>
+  </div>
+</section>
+
+<!-- 8. VALIDATION -->
+<section>
+  <h2><span class="n">8</span>Ai-je bien compris ?</h2>
+  <p class="mut">Coche seulement si tu peux l'expliquer avec tes mots.</p>
+  <label class="check"><input type="checkbox" class="cb"><span>Je sais à quoi sert le D.I.P.S : arriver dans un état de performance optimal.</span></label>
+  <label class="check"><input type="checkbox" class="cb"><span>Je connais les 4 lettres et le rôle de chacune.</span></label>
+  <label class="check"><input type="checkbox" class="cb"><span>Je sais pourquoi l'ordre D › I › P › S ne change jamais.</span></label>
+  <label class="check"><input type="checkbox" class="cb"><span>Je sais à quel moment de ma routine je fais chaque lettre.</span></label>
+  <label class="check"><input type="checkbox" class="cb"><span>Je sais qu'après la causerie, seul le Souffle reste possible.</span></label>
+  <label class="check"><input type="checkbox" class="cb"><span>Je fais mon D.I.P.S en venant au stade quoi qu'il arrive, titulaire ou remplaçant.</span></label>
+  <label class="check"><input type="checkbox" class="cb"><span>Si je suis sur le banc, je lance un 2nd D.I.P.S au coup d'envoi, sans Distraction : le D devient Diagnostic du vis-à-vis.</span></label>
+  <label class="check"><input type="checkbox" class="cb"><span>Je sais qu'en jeu, c'est le S.O.T.A qui prend le relais.</span></label>
+  <label class="check"><input type="checkbox" class="cb"><span>J'ai compris que le but est que ça devienne automatique, grâce à l'entraînement.</span></label>
+  <div class="bar"><div id="prog"></div></div>
+  <p class="mut" id="progTxt" style="font-size:14px">0 / 7</p>
+  <div class="ready" id="ready">Tu es prêt. Passe à ta fiche D.I.P.S d'avant-match.<a class="go" href="dips-fiche-avant-match.html">Ouvrir ma fiche D.I.P.S ›</a></div>
+  <div class="btns noprint">
+    <button onclick="window.print()">Exporter en PDF</button>
+    <button class="sec" onclick="sendMail()">Envoyer au coach</button>
+  </div>
+</section>
+
+<footer>Y.E.S.I CONCEPT · Yes Attitude · Estime de soi · Smart Goals · Investissement</footer>
+</div>
+
+<script>
+const KEY='yesi_dips_comprendre';
+const ids=['nom','scoreAct','scoreObj','diff'];
+const cbs=[...document.querySelectorAll('.cb')];
+function save(){
+  try{
+    const d={cb:cbs.map(c=>c.checked)};
+    ids.forEach(i=>d[i]=document.getElementById(i).value);
+    localStorage.setItem(KEY,JSON.stringify(d));
+  }catch(e){}
+}
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem(KEY)||'null'); if(!d)return;
+    ids.forEach(i=>{if(d[i]!=null)document.getElementById(i).value=d[i]});
+    (d.cb||[]).forEach((v,i)=>{if(cbs[i])cbs[i].checked=v});
+  }catch(e){}
+}
+function upd(){
+  const n=cbs.filter(c=>c.checked).length;
+  document.getElementById('prog').style.width=(n/cbs.length*100)+'%';
+  document.getElementById('progTxt').textContent=n+' / '+cbs.length;
+  document.getElementById('ready').style.display=n===cbs.length?'block':'none';
+}
+cbs.forEach(c=>c.addEventListener('change',()=>{upd();save()}));
+ids.forEach(i=>document.getElementById(i).addEventListener('input',save));
+function sendMail(){
+  const v=i=>document.getElementById(i).value||'—';
+  const n=cbs.filter(c=>c.checked).length;
+  const body=`Comprendre le D.I.P.S — fiche lue\n\nJoueur : ${v('nom')}\nScore D.I.P.S actuel : ${v('scoreAct')}/10\nObjectif 4 semaines : ${v('scoreObj')}/10\nLettre la plus difficile : ${v('diff')}\n\nPoints compris : ${n}/${cbs.length}`;
+  location.href='mailto:yesiconcept.rdv@gmail.com?subject='+encodeURIComponent('D.I.P.S compris — '+v('nom'))+'&body='+encodeURIComponent(body);
+}
+load();upd();
+</script>
+<div id="yesiGate" style="position:fixed;inset:0;z-index:2147483000;background:#011228;color:#fff;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif"><div style="max-width:340px"><p style="font:700 24px/1.2 Georgia,'Times New Roman',serif;margin:0 0 8px">Y.E.S.I CONCEPT</p><p id="yesiGateMsg" style="margin:0 0 18px;color:#c9d8ef;font-size:15px;line-height:1.45">Chargement…</p><button id="yesiGateBtn" type="button" style="display:none;width:100%;min-height:48px;border-radius:10px;border:1px solid #1F6FD6;background:#1F6FD6;color:#fff;font-weight:700;font-size:16px;line-height:1.2;font-family:inherit;cursor:pointer">Se connecter avec Google</button><a id="yesiGateBack" href="parcours.html" style="display:flex;align-items:center;justify-content:center;margin-top:10px;min-height:46px;border-radius:10px;border:1px solid #24426E;color:#DCE7F7;text-decoration:none;font-weight:600;font-size:15px">Retour au parcours</a></div></div>
+<script class="fgAuth" src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js" crossorigin="anonymous"></script>
+<script class="fgAuth" src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js" crossorigin="anonymous"></script>
+<script class="fgAuth" src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js" crossorigin="anonymous"></script>
+<script class="fgAuth">
+(function(){
+ var KEY="",ADMIN="yesiconcept.rdv@gmail.com";
+ var gate=document.getElementById("yesiGate"),msg=document.getElementById("yesiGateMsg"),btn=document.getElementById("yesiGateBtn");
+ function open(){if(gate&&gate.parentNode)gate.parentNode.removeChild(gate);}
+ function say(t,login){msg.textContent=t;btn.style.display=login?"block":"none";}
+ try{if(typeof EMBED!=="undefined"&&EMBED){open();return;}}catch(e){}
+ if(!window.firebase){say("Connexion impossible. Vérifie ta connexion internet puis recharge la page.");return;}
+ if(!firebase.apps.length)firebase.initializeApp({apiKey:"AIzaSyA1NE8TIoR3NafqF39SSOZ3nlJGpXgJ95A",authDomain:"suivi-joueur.firebaseapp.com",projectId:"suivi-joueur",storageBucket:"suivi-joueur.firebasestorage.app",messagingSenderId:"2190589503",appId:"1:2190589503:web:e6df856ce4577d1e41828a"});
+ var auth=firebase.auth(),db=firebase.firestore(),unsub=null;
+ btn.onclick=function(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){say("Connexion impossible : "+(e.code||e.message),true);});};
+ auth.onAuthStateChanged(function(u){
+  if(unsub){unsub();unsub=null;}
+  if(!u){say("Connecte-toi avec le compte Google de ton suivi FOCUS GAME.",true);return;}
+  var email=(u.email||"").toLowerCase();
+  if(email===ADMIN){open();return;}
+  db.collection("whitelist").doc(email).get().then(function(w){
+   if(!w.exists){say("Ce compte n'est pas autorisé. Contacte ton coach Y.E.S.I CONCEPT pour obtenir l'accès.");return;}
+   if(!KEY){open();return;}
+   say("Vérification de l'accès…");
+   unsub=db.collection("suiviConfig").doc(email).onSnapshot(function(d){
+    var deb=(d.exists&&d.data().parcoursDeblocages)||{};
+    if(deb[KEY]===true){if(unsub){unsub();unsub=null;}open();}
+    else say("Cet audit se fait en séance avec Mr Din. Il sera débloqué pendant ton rendez-vous.");
+   },function(e){say("Accès impossible ("+(e.code||e.message)+").");});
+  }).catch(function(e){say("Accès impossible ("+(e.code||e.message)+").");});
+ });
+})();
+</script>
+</body>
+</html>
